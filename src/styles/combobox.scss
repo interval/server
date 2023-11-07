@@ -1,0 +1,143 @@
+/* wrapper class necessary to add enough specificity to override some defaults */
+.iv-select-container {
+  .iv-select__control {
+    @apply border border-gray-300 rounded-md cursor-pointer;
+
+    &:hover {
+      @apply border-gray-300;
+    }
+    &.--is-disabled {
+      background-color: #f9fafb; /* gray-50 */
+    }
+  }
+
+  .has-error & {
+    .iv-select__control {
+      @apply border-amber-500 bg-amber-50;
+    }
+    .iv-select__indicator-separator {
+      @apply bg-amber-300;
+    }
+    .iv-select__placeholder {
+      color: #d7c08c;
+    }
+  }
+
+  /* react-select */
+  .iv-select__placeholder,
+  .iv-select__single-value,
+  .iv-select__option,
+  .iv-select__input {
+    @apply text-sm text-inherit;
+  }
+
+  .iv-select__input {
+    @apply !text-sm;
+  }
+
+  .iv-select__single-value {
+  }
+
+  .iv-select__control--is-disabled {
+    @apply bg-gray-100;
+  }
+
+  .iv-select__placeholder {
+    @apply text-gray-400 ml-0 pl-0.5;
+  }
+  .iv-select__input {
+    color: inherit;
+  }
+
+  .iv-select__value-container {
+    @apply pl-2.5 cursor-pointer;
+  }
+  .iv-select__value-container--is-multi {
+    @apply pl-0.5;
+
+    .iv-select__placeholder,
+    .iv-select__input-container {
+      @apply ml-2;
+    }
+  }
+
+  .iv-select__multi-value + .iv-select__input-container {
+    @apply ml-1;
+  }
+
+  .iv-select__control--is-focused {
+    @apply ring-2 outline-1 outline-primary-500 border-primary-500;
+
+    &:hover {
+      @apply border-primary-500;
+    }
+
+    &.iv-select__control--menu-is-open {
+      & .iv-select__single-value {
+        @apply opacity-40 cursor-text;
+      }
+
+      & .iv-select__placeholder,
+      & .iv-select__input-container {
+        @apply cursor-text;
+      }
+    }
+
+    .has-error & {
+      @apply iv-field-focus--error;
+    }
+  }
+
+  .iv-select__indicator-separator {
+    @apply bg-gray-200;
+  }
+  .iv-select__indicator {
+    @apply text-gray-400 cursor-pointer;
+  }
+  .iv-select__dropdown-indicator {
+    @apply px-3;
+  }
+  .iv-select__clear-indicator:hover {
+    @apply text-red-600;
+  }
+
+  .iv-select__multi-value {
+    @apply bg-white rounded-md text-gray-600 border border-gray-300;
+  }
+  .iv-select__multi-value__remove {
+    @apply cursor-pointer rounded-r-md;
+
+    &:hover {
+      @apply text-red-600 bg-red-100;
+    }
+  }
+
+  .iv-select__menu {
+    @apply border border-gray-300 shadow-lg rounded-lg overflow-hidden z-20;
+  }
+
+  .iv-select__option {
+    @apply cursor-pointer text-sm;
+
+    &:hover,
+    &.iv-select__option--is-focused {
+      @apply bg-blue-100;
+    }
+  }
+  .iv-select__option--is-selected {
+    @apply bg-primary-500 text-white;
+
+    span {
+      @apply text-white;
+    }
+
+    &:hover,
+    &.iv-select__option--is-focused {
+      @apply bg-primary-500;
+    }
+  }
+
+  .iv-select__menu-notice {
+    @apply text-sm text-left px-4 block text-gray-600;
+  }
+}

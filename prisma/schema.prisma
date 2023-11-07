@@ -1,0 +1,733 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch"]
+}
+
+generator viteCleaner {
+  provider = "./prisma/clean-vite-cache-generator.js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                        String              @id @default(dbgenerated("nanoid()"))
+  isGhostMode               Boolean             @default(false)
+  email                     String              @unique
+  password                  String?
+  mfaId                     String?             @unique
+  idpId                     String?             @unique
+  firstName                 String?
+  lastName                  String?
+  defaultNotificationMethod NotificationMethod? @default(EMAIL)
+  timeZoneName              String?
+  createdAt                 DateTime            @default(now())
+  updatedAt                 DateTime            @default(now()) @updatedAt
+  deletedAt                 DateTime?
+
+  apiKeys                 ApiKey[]
+  organizations           Organization[]
+  transactions            Transaction[]
+  userOrganizationAccess  UserOrganizationAccess[]
+  passwordResetToken      UserPasswordResetToken?
+  emailConfirmToken       UserEmailConfirmToken?
+  userSessions            UserSession[]
+  developmentActions      Action[]
+  developmentActionGroups ActionGroup[]
+  queuedActions           QueuedAction[]
+  actionSchedules         ActionSchedule[]
+  notificationsReceived   NotificationDelivery[]
+  referralInfo            UserReferralInfo?
+  outreachStatus          UserOutreachStatus?
+}
+
+model UserReferralInfo {
+  id     String @id @default(dbgenerated("nanoid()"))
+  userId String @unique
+
+  referrer    String?
+  utmSource   String?
+  utmMedium   String?
+  utmCampaign String?
+  utmTerm     String?
+  utmContent  String?
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model UserSession {
+  id                  String    @id @default(dbgenerated("nanoid()"))
+  userId              String
+  ssoAccessToken      String?   @unique
+  mfaChallengeId      String?   @unique
+  createdAt           DateTime  @default(now())
+  lastUsedAt          DateTime  @default(now())
+  identityConfirmedAt DateTime?
+
+  user         User              @relation(fields: [userId], references: [id])
+  mfaChallenge UserMfaChallenge? @relation(fields: [mfaChallengeId], references: [id])
+}
+
+model UserMfaChallenge {
+  id         String    @id
+  mfaId      String
+  createdAt  DateTime
+  updatedAt  DateTime
+  expiresAt  DateTime?
+  verifiedAt DateTime?
+
+  session UserSession?
+}
+
+model UserPasswordResetToken {
+  id        String   @id @default(dbgenerated("nanoid()"))
+  userId    String   @unique
+  createdAt DateTime @default(now())
+  expiresAt DateTime @default(dbgenerated("(now() + '00:30:00'::interval)"))
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model UserEmailConfirmToken {
+  id        String   @id @default(dbgenerated("nanoid()"))
+  userId    String   @unique
+  email     String?
+  createdAt DateTime @default(now())
+  expiresAt DateTime @default(dbgenerated("(now() + '00:30:00'::interval)"))
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model Organization {
+  id          String    @id @default(dbgenerated("nanoid()"))
+  name        String
+  ownerId     String
+  isGhostMode Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @default(now()) @updatedAt
+  deletedAt   DateTime?
+  slug        String    @unique
+  promoCode   String?
+  requireMfa  Boolean   @default(false)
+
+  owner                      User                         @relation(fields: [ownerId], references: [id])
+  organizationPromoCode      OrganizationPromoCode?       @relation(fields: [promoCode], references: [code])
+  actions                    Action[]
+  actionGroups               ActionGroup[]
+  apiKeys                    ApiKey[]
+  httpHosts                  HttpHost[]
+  hostInstances              HostInstance[]
+  environments               OrganizationEnvironment[]
+  userOrganizationAccess     UserOrganizationAccess[]
+  userOrganizationInvitation UserOrganizationInvitation[]
+  sso                        OrganizationSSO?
+  scimDirectory              OrganizationSCIMDirectory?
+  userAccessGroups           UserAccessGroup[]
+  notifications              Notification[]
+  private                    OrganizationPrivate?
+  featureFlags               OrganizationFeatureFlag[]
+}
+
+model OrganizationPrivate {
+  id               String       @id @default(dbgenerated("nanoid()"))
+  slackAccessToken String?
+  organizationId   String       @unique
+  organization     Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+}
+
+model OrganizationSSO {
+  id                     String                 @id @default(dbgenerated("nanoid()"))
+  organizationId         String                 @unique
+  domain                 String                 @unique
+  workosOrganizationId   String?                @unique
+  defaultUserPermissions UserAccessPermission[]
+
+  organization Organization @relation(fields: [organizationId], references: [id])
+}
+
+model OrganizationSCIMDirectory {
+  id                String @id @default(dbgenerated("nanoid()"))
+  organizationId    String @unique
+  workosDirectoryId String @unique
+
+  organization Organization @relation(fields: [organizationId], references: [id])
+}
+
+model OrganizationEnvironment {
+  id             String  @id @default(dbgenerated("nanoid()"))
+  organizationId String
+  slug           String  @default("production")
+  name           String
+  color          String?
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
+  deletedAt DateTime?
+
+  organization Organization  @relation(fields: [organizationId], references: [id])
+  apiKeys      ApiKey[]
+  actions      Action[]
+  actionGroups ActionGroup[]
+}
+
+model UserOrganizationAccess {
+  id                    String   @id @default(dbgenerated("nanoid()"))
+  userId                String
+  organizationId        String
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @default(now()) @updatedAt
+  lastSwitchedToAt      DateTime @default(now())
+  slackOauthNonce       String?
+  onboardingExampleSlug String?
+
+  organization     Organization                @relation(fields: [organizationId], references: [id])
+  user             User                        @relation(fields: [userId], references: [id])
+  permissions      UserAccessPermission[]
+  groupMemberships UserAccessGroupMembership[]
+
+  @@unique([userId, organizationId])
+}
+
+model UserOrganizationInvitation {
+  id             String                 @id @default(dbgenerated("nanoid()"))
+  email          String
+  organizationId String
+  createdAt      DateTime               @default(now())
+  organization   Organization           @relation(fields: [organizationId], references: [id])
+  permissions    UserAccessPermission[]
+  groupIds       Json?
+}
+
+model UserAccessGroup {
+  id             String @id @default(dbgenerated("nanoid()"))
+  organizationId String
+  name           String
+  slug           String
+
+  scimGroupId String? @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  organization        Organization                @relation(fields: [organizationId], references: [id])
+  memberships         UserAccessGroupMembership[]
+  actionAccesses      ActionAccess[]
+  actionGroupAccesses ActionGroupAccess[]
+
+  @@unique([organizationId, slug])
+}
+
+model UserAccessGroupMembership {
+  id                       String @id @default(dbgenerated("nanoid()"))
+  userOrganizationAccessId String
+  groupId                  String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  userOrganizationAccess UserOrganizationAccess @relation(fields: [userOrganizationAccessId], references: [id])
+  group                  UserAccessGroup        @relation(fields: [groupId], references: [id])
+
+  @@unique([userOrganizationAccessId, groupId])
+}
+
+model ActionAccess {
+  id                String            @id @default(dbgenerated("nanoid()"))
+  actionMetadataId  String
+  userAccessGroupId String
+  level             ActionAccessLevel
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  actionMetadata  ActionMetadata  @relation(fields: [actionMetadataId], references: [id])
+  userAccessGroup UserAccessGroup @relation(fields: [userAccessGroupId], references: [id])
+
+  @@unique([actionMetadataId, userAccessGroupId])
+}
+
+model ActionGroupAccess {
+  id                    String            @id @default(dbgenerated("nanoid()"))
+  actionGroupMetadataId String
+  userAccessGroupId     String
+  level                 ActionAccessLevel
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  actionGroupMetadata ActionGroupMetadata? @relation(fields: [actionGroupMetadataId], references: [id])
+  userAccessGroup     UserAccessGroup      @relation(fields: [userAccessGroupId], references: [id])
+
+  @@unique([actionGroupMetadataId, userAccessGroupId])
+}
+
+// When making any changes here ensure the following are still valid:
+//
+// 1. ROLE_PERMISSIONS in utils/permissions.ts
+// 2. userAccessPermissionToString in utils/text.ts
+enum UserAccessPermission {
+  // Roles
+  ADMIN
+  DEVELOPER
+  ACTION_RUNNER
+  READONLY_VIEWER
+
+  // Permissions
+  RUN_DEV_ACTIONS
+  RUN_PROD_ACTIONS
+  WRITE_PROD_ACTIONS
+  READ_DEV_ACTIONS
+  READ_PROD_ACTIONS
+  READ_DEV_TRANSACTIONS
+  READ_PROD_TRANSACTIONS
+  READ_ORG_PROD_TRANSACTIONS // View all transactions for the organization
+
+  ACCESS_ORG_ENVIRONMENTS // Access non-default organization environments
+
+  DEQUEUE_PROD_ACTIONS
+
+  READ_USERS
+  WRITE_USERS
+
+  CREATE_DEV_API_KEYS
+  CREATE_PROD_API_KEYS
+
+  READ_ORG_USER_API_KEY_EXISTENCE
+  DELETE_ORG_USER_API_KEYS
+
+  WRITE_ORG_SETTINGS
+  WRITE_ORG_OAUTH
+}
+
+enum ActionAccessLevel {
+  VIEWER
+  RUNNER
+  ADMINISTRATOR
+}
+
+model ApiKey {
+  id                        String           @id @default(dbgenerated("nanoid()"))
+  isGhostMode               Boolean          @default(false)
+  organizationId            String
+  userId                    String
+  key                       String           @unique
+  createdAt                 DateTime         @default(now())
+  updatedAt                 DateTime         @default(now()) @updatedAt
+  label                     String?
+  usageEnvironment          UsageEnvironment
+  organizationEnvironmentId String
+  deletedAt                 DateTime?
+
+  organization            Organization            @relation(fields: [organizationId], references: [id])
+  organizationEnvironment OrganizationEnvironment @relation(fields: [organizationEnvironmentId], references: [id])
+  user                    User                    @relation(fields: [userId], references: [id])
+  hostInstances           HostInstance[]
+}
+
+model Action {
+  id                        String   @id @default(dbgenerated("nanoid()"))
+  slug                      String
+  organizationId            String
+  createdAt                 DateTime @default(now())
+  updatedAt                 DateTime @default(now()) @updatedAt
+  developerId               String?
+  organizationEnvironmentId String
+  isInline                  Boolean  @default(false)
+
+  name           String?
+  description    String?
+  backgroundable Boolean?
+  warnOnClose    Boolean  @default(true)
+  unlisted       Boolean  @default(false)
+
+  organization            Organization            @relation(fields: [organizationId], references: [id])
+  organizationEnvironment OrganizationEnvironment @relation(fields: [organizationEnvironmentId], references: [id])
+  transactions            Transaction[]
+  queued                  QueuedAction[]
+  schedules               ActionSchedule[]
+  developer               User?                   @relation(fields: [developerId], references: [id])
+  httpHostRequests        HttpHostRequest[]
+
+  hostInstances HostInstance[]
+  httpHosts     HttpHost[]
+
+  metadata ActionMetadata?
+
+  @@unique([slug, organizationId, developerId, organizationEnvironmentId])
+}
+
+model ActionGroup {
+  id                        String   @id @default(dbgenerated("nanoid()"))
+  slug                      String
+  name                      String
+  description               String?
+  unlisted                  Boolean  @default(false)
+  hasHandler                Boolean  @default(false)
+  organizationId            String
+  createdAt                 DateTime @default(now())
+  updatedAt                 DateTime @default(now()) @updatedAt
+  developerId               String?
+  organizationEnvironmentId String
+
+  organization            Organization            @relation(fields: [organizationId], references: [id])
+  organizationEnvironment OrganizationEnvironment @relation(fields: [organizationEnvironmentId], references: [id])
+  developer               User?                   @relation(fields: [developerId], references: [id])
+
+  hostInstances    HostInstance[]
+  httpHosts        HttpHost[]
+  httpHostRequests HttpHostRequest[]
+  metadata         ActionGroupMetadata?
+
+  @@unique([slug, organizationId, developerId, organizationEnvironmentId])
+}
+
+model ActionMetadata {
+  id                          String              @id @default(dbgenerated("nanoid()"))
+  name                        String?
+  availability                ActionAvailability?
+  description                 String?
+  backgroundable              Boolean?
+  createdAt                   DateTime            @default(now())
+  updatedAt                   DateTime            @default(now()) @updatedAt
+  archivedAt                  DateTime?
+  defaultNotificationDelivery Json?
+  actionId                    String              @unique
+
+  accesses ActionAccess[]
+  action   Action         @relation(fields: [actionId], references: [id])
+}
+
+model ActionGroupMetadata {
+  id            String              @id @default(dbgenerated("nanoid()"))
+  availability  ActionAvailability?
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @default(now()) @updatedAt
+  actionGroupId String              @unique
+
+  accesses ActionGroupAccess[]
+  group    ActionGroup         @relation(fields: [actionGroupId], references: [id])
+}
+
+enum ActionAvailability {
+  ORGANIZATION
+  GROUPS
+}
+
+model HostInstance {
+  id             String             @id @default(dbgenerated("gen_random_uuid()"))
+  organizationId String
+  apiKeyId       String
+  status         HostInstanceStatus
+  sdkName        String?
+  sdkVersion     String?
+  requestId      String?            @unique
+  isInitializing Boolean            @default(false)
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @default(now()) @updatedAt
+
+  apiKey          ApiKey           @relation(fields: [apiKeyId], references: [id])
+  organization    Organization     @relation(fields: [organizationId], references: [id])
+  httpHostRequest HttpHostRequest? @relation(fields: [requestId], references: [id])
+  actions         Action[]
+  actionGroups    ActionGroup[]
+  transactions    Transaction[]
+}
+
+model HttpHost {
+  id             String             @id @default(dbgenerated("gen_random_uuid()"))
+  organizationId String
+  status         HostInstanceStatus
+  url            String
+  sdkName        String?
+  sdkVersion     String?
+
+  lastConnectedAt DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @default(now()) @updatedAt
+  deletedAt       DateTime?
+
+  organization Organization      @relation(fields: [organizationId], references: [id])
+  actions      Action[]
+  actionGroups ActionGroup[]
+  requests     HttpHostRequest[]
+
+  @@unique([organizationId, url])
+}
+
+model HttpHostRequest {
+  id            String    @id @default(dbgenerated("gen_random_uuid()"))
+  httpHostId    String
+  actionId      String?
+  actionGroupId String?
+  createdAt     DateTime  @default(now())
+  invalidAt     DateTime?
+
+  httpHost     HttpHost      @relation(fields: [httpHostId], references: [id])
+  action       Action?       @relation(fields: [actionId], references: [id])
+  actionGroup  ActionGroup?  @relation(fields: [actionGroupId], references: [id])
+  hostInstance HostInstance?
+}
+
+model Transaction {
+  id                  String                   @id @default(dbgenerated("nanoid()"))
+  ownerId             String
+  actionId            String
+  status              TransactionStatus
+  createdAt           DateTime                 @default(now())
+  updatedAt           DateTime                 @default(now()) @updatedAt
+  completedAt         DateTime?
+  resultSchemaVersion Int?
+  resultStatus        TransactionResultStatus?
+  resultData          Json?
+  resultDataMeta      Json?
+  currentClientId     String?
+  hostInstanceId      String?
+  actionScheduleId    String?
+  lastInputGroupKey   String?
+
+  action            Action                   @relation(fields: [actionId], references: [id])
+  actionSchedule    ActionSchedule?          @relation(fields: [actionScheduleId], references: [id])
+  actionScheduleRun ActionScheduleRun?
+  hostInstance      HostInstance?            @relation(fields: [hostInstanceId], references: [id])
+  owner             User                     @relation(fields: [ownerId], references: [id])
+  queuedAction      QueuedAction?
+  logs              TransactionLog[]
+  notifications     Notification[]
+  requirements      TransactionRequirement[]
+}
+
+model TransactionLog {
+  id            String      @id @default(dbgenerated("nanoid()"))
+  transactionId String
+  createdAt     DateTime    @default(now())
+  index         Int         @default(0)
+  data          String?
+  transaction   Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+}
+
+model TransactionRequirement {
+  id            String                     @id @default(dbgenerated("nanoid()"))
+  transactionId String
+  createdAt     DateTime                   @default(now())
+  type          TransactionRequirementType
+  gracePeriodMs Int?
+  ioCallId      String?
+  satisfiedAt   DateTime?
+  canceledAt    DateTime?
+  transaction   Transaction                @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+}
+
+model QueuedAction {
+  id            String   @id @default(dbgenerated("nanoid()"))
+  actionId      String
+  transactionId String?  @unique
+  assigneeId    String?
+  params        Json?
+  paramsMeta    Json?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @default(now()) @updatedAt
+
+  action      Action       @relation(fields: [actionId], references: [id])
+  transaction Transaction? @relation(fields: [transactionId], references: [id])
+  assignee    User?        @relation(fields: [assigneeId], references: [id])
+}
+
+model ActionSchedule {
+  id       String  @id @default(dbgenerated("nanoid()"))
+  actionId String
+  runnerId String?
+
+  second       String
+  minute       String
+  hour         String
+  dayOfMonth   String
+  month        String
+  dayOfWeek    String
+  timeZoneName String
+
+  notifyOnSuccess Boolean @default(false)
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
+  deletedAt DateTime?
+
+  action       Action              @relation(fields: [actionId], references: [id])
+  runner       User?               @relation(fields: [runnerId], references: [id])
+  runs         ActionScheduleRun[]
+  transactions Transaction[]
+}
+
+model ActionScheduleRun {
+  id               String                  @id @default(dbgenerated("nanoid()"))
+  actionScheduleId String
+  status           ActionScheduleRunStatus
+  transactionId    String?                 @unique
+  details          String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  actionSchedule ActionSchedule @relation(fields: [actionScheduleId], references: [id])
+  transaction    Transaction?   @relation(fields: [transactionId], references: [id])
+}
+
+model LoggedIOCall {
+  id            String           @id @default(dbgenerated("nanoid()"))
+  methodName    String
+  transactionId String
+  environment   UsageEnvironment
+  createdAt     DateTime         @default(now())
+}
+
+model Notification {
+  id                     String                 @id @default(dbgenerated("nanoid()"))
+  createdAt              DateTime               @default(now())
+  message                String
+  title                  String?
+  idempotencyKey         String?
+  environment            UsageEnvironment
+  transactionId          String?
+  organizationId         String
+  organization           Organization           @relation(fields: [organizationId], references: [id])
+  transaction            Transaction?           @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+  notificationDeliveries NotificationDelivery[]
+}
+
+model NotificationDelivery {
+  id             String                     @id @default(dbgenerated("nanoid()"))
+  createdAt      DateTime                   @default(now())
+  updatedAt      DateTime                   @default(now()) @updatedAt
+  method         NotificationMethod?
+  status         NotificationDeliveryStatus @default(PENDING)
+  to             String
+  error          String?
+  userId         String?
+  user           User?                      @relation(fields: [userId], references: [id])
+  notificationId String
+  notification   Notification               @relation(fields: [notificationId], references: [id], onDelete: Cascade)
+}
+
+model UserWaitlistEntry {
+  id               String   @id @default(dbgenerated("nanoid()"))
+  firstName        String?
+  lastName         String?
+  email            String   @unique
+  organizationName String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @default(now()) @updatedAt
+}
+
+model GlobalFeatureFlag {
+  id        String                @id @default(dbgenerated("nanoid()"))
+  flag      ConfiguredFeatureFlag @unique
+  enabled   Boolean               @default(false)
+  createdAt DateTime              @default(now())
+  updatedAt DateTime              @default(now()) @updatedAt
+}
+
+model OrganizationFeatureFlag {
+  id             String                @id @default(dbgenerated("nanoid()"))
+  organizationId String
+  flag           ConfiguredFeatureFlag
+  enabled        Boolean               @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  organization Organization @relation(fields: [organizationId], references: [id])
+
+  @@unique([organizationId, flag])
+}
+
+model SdkAlert {
+  id            String           @id @default(dbgenerated("nanoid()"))
+  sdkName       String
+  minSdkVersion String
+  severity      SdkAlertSeverity
+  message       String?
+  createdAt     DateTime         @default(now())
+  updatedat     DateTime         @default(now()) @updatedAt
+}
+
+model UserOutreachStatus {
+  id              String    @id @default(dbgenerated("nanoid()"))
+  userId          String    @unique
+  doNotContact    Boolean   @default(false)
+  notes           String?
+  lastContactedAt DateTime?
+  lastContactedBy String?
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model OrganizationPromoCode {
+  id            String         @id @default(dbgenerated("nanoid()"))
+  code          String         @unique
+  description   String?
+  organizations Organization[]
+}
+
+enum SdkAlertSeverity {
+  INFO
+  WARNING
+  ERROR
+}
+
+enum ConfiguredFeatureFlag {
+  // Global behavior flags
+  USER_REGISTRATION_ENABLED
+  GHOST_MODE_ENABLED
+
+  // User experience flags, can be enabled globally as well
+  TRANSACTION_LEGACY_NO_APPEND_UI
+  ACTION_METADATA_GENERAL_CONFIG
+  TABLE_TRUNCATION_DISABLED
+}
+
+enum HostInstanceStatus {
+  ONLINE
+  OFFLINE
+  UNREACHABLE
+  SHUTTING_DOWN
+}
+
+enum TransactionStatus {
+  RUNNING
+  AWAITING_INPUT
+  COMPLETED
+  HOST_CONNECTION_DROPPED
+  CLIENT_CONNECTION_DROPPED
+  PENDING
+}
+
+enum TransactionResultStatus {
+  SUCCESS
+  FAILURE
+  CANCELED
+  REDIRECTED
+}
+
+enum ActionScheduleRunStatus {
+  SUCCESS
+  FAILURE
+}
+
+enum UsageEnvironment {
+  PRODUCTION
+  DEVELOPMENT
+}
+
+enum NotificationMethod {
+  EMAIL
+  SLACK
+}
+
+enum NotificationDeliveryStatus {
+  PENDING
+  FAILED
+  DELIVERED
+}
+
+enum TransactionRequirementType {
+  IDENTITY_CONFIRM
+}

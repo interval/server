@@ -1,0 +1,20 @@
+{{#>layout}}
+{{#*inline "content"}}
+
+<h1>Please confirm your email</h1>
+
+{{#if isEmailChange}}
+<p>We received a request to change your email address on Interval. Click the button below to confirm your new email:</p>
+{{else}}
+<p>Click the button below to confirm your email address on Interval:</p>
+{{/if}}
+
+{{> actionButton url=confirmUrl label='Confirm email' }}
+
+{{#if isEmailChange}}
+<p>If you didn't request to change your email address, you can safely ignore this email.</p>
+{{/if}}
+
+
+{{/inline}}
+{{/layout}}

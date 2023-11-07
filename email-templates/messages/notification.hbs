@@ -1,0 +1,36 @@
+{{#>layout}}
+{{#*inline "content"}}
+
+{{#if title}}
+<h1>{{title}}</h1>
+{{else}}
+<h1>Interval notification</h1>
+{{/if}}
+
+<p>A notification has been triggered via Interval.</p>
+
+<blockquote>
+{{#if title}}
+<b>{{title}}</b>
+<br>
+{{/if}}
+{{message}}
+</blockquote>
+
+<ul>
+  <li><b>Sent at:</b> {{metadata.createdAt}}</li>
+</ul>
+
+{{#unless_equals failedDetails.length 0}}
+<div class='notification-failures'>
+<p><code>⚠️  Delivery failed for this notification to the following destinations:</code></p>
+<ul>
+{{#each failedDetails}}
+<li><code><b>{{this.to}} via {{this.method}}:</b> {{this.error}}</code></li>
+{{/each}}
+</ul>
+</div>
+{{/unless_equals}}
+
+{{/inline}}
+{{/layout}}

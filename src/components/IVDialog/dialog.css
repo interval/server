@@ -1,0 +1,30 @@
+/*
+Reakit uses data attributes to assist with modal animations, so we apply the
+CSS changes here instead of using Tailwind classes.
+*/
+
+.dialog,
+.dialog[data-leave] {
+  @apply opacity-0 scale-95;
+}
+.dialog[data-enter] {
+  @apply opacity-100 scale-100;
+}
+
+/* note: you must use the `background` property here, not tailwind's bg-* and bg-opacity-*. */
+/* the tailwind directives don't trigger the animation events that reakit relies on for show/hide. */
+.dialog-backdrop--shade,
+.dialog-backdrop--shade[data-leave] {
+  background: rgba(0, 0, 0, 0);
+}
+.dialog-backdrop--shade[data-enter] {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.dialog-backdrop--white,
+.dialog-backdrop--white[data-leave] {
+  background: rgba(255, 255, 255, 0);
+}
+.dialog-backdrop--white[data-enter] {
+  background: rgba(255, 255, 255, 1);
+}

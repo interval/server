@@ -1,0 +1,2 @@
+-- AlterEnum
+ALTER TYPE "UserAccessPermission" ADD VALUE 'ACCESS_ORG_ENVIRONMENTS';

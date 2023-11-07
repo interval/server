@@ -1,0 +1,2 @@
+-- AlterEnum
+ALTER TYPE "ConfiguredFeatureFlag" ADD VALUE 'SCHEDULED_ACTIONS_ENABLED';

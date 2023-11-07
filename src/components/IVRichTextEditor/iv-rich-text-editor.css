@@ -1,0 +1,29 @@
+/* Remove browser-default outline in root element */
+.ProseMirror {
+  outline: none !important;
+  min-height: 150px;
+  font-size: 14px;
+}
+
+/* Enforce larger clickable area for empty input */
+.ProseMirror p.is-editor-empty:first-child {
+  min-height: 150px;
+}
+
+/* Enable placeholder plugin */
+.ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: #adb5bd;
+  pointer-events: none;
+  height: 0;
+}
+
+/* Disable default .prose margins at top and bottom */
+.ProseMirror > :first-child {
+  margin-top: 0;
+}
+
+.ProseMirror > :last-child {
+  margin-bottom: 0;
+}

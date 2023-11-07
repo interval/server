@@ -1,0 +1,34 @@
+/* These are defined here because Tailwind arbitrary values don't support [ & ] */
+
+details.iv-object-viewer > summary::after {
+  content: '{...}';
+}
+
+details.iv-object-viewer > summary span::after {
+  content: ':';
+}
+
+details.iv-object-viewer.is-open > summary::after {
+  content: '{';
+}
+
+details.iv-object-viewer.is-open::after {
+  content: '}';
+}
+
+details.iv-object-viewer.is-array > summary::after {
+  content: '[...]';
+}
+
+details.iv-object-viewer.is-array.is-open > summary::after {
+  content: '[';
+}
+
+details.iv-object-viewer.is-array::after {
+  content: ']';
+}
+
+details.iv-object-viewer:not(.is-collapsible)
+  > summary::-webkit-details-marker {
+  display: none;
+}

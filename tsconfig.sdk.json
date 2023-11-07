@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": "../sdk-js",
+    "outDir": "dist/node_modules/@interval/sdk",
+    "module": "commonjs",
+    "noEmit": false,
+    "resolveJsonModule": true
+  },
+  "include": [
+    "../sdk-js/src/**/*",
+    "../sdk-js/package.json",
+    "../sdk-js/typings.d.ts"
+  ],
+  "exclude": ["../sdk-js/src/examples/**/*"]
+}

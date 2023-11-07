@@ -1,0 +1,5 @@
+{
+  "signal": "SIGTERM",
+  "ext": "hbs,ts",
+  "exec": "ts-node -r tsconfig-paths/register src/emails/preview-server.ts"
+}

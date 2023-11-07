@@ -1,0 +1,3 @@
+string,optionalString,number,boolean
+A string,,23,1
+Another string,A third string,3,0

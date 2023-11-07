@@ -1,0 +1,3 @@
+.iv-tooltip[data-enter] > div {
+  @apply opacity-100 delay-150;
+}

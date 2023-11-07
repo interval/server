@@ -1,0 +1,245 @@
+.iv-table-cell {
+  --color-cell-bg: #fff;
+  @apply relative;
+  @apply before:h-px before:absolute before:-top-px before:left-0 before:w-full before:bg-gray-100;
+  @apply after:h-px after:absolute after:-bottom-px after:left-0 after:w-full after:bg-gray-100;
+
+  /* remove vertical margins around linked images */
+  .prose-link:only-child > figure {
+    @apply my-0;
+  }
+}
+
+.iv-table-cell:not([data-highlight-color]) {
+  .prose-link:only-child {
+    strong:only-child {
+      @apply text-gray-700;
+    }
+
+    &:hover strong:only-child {
+      @apply text-gray-700;
+    }
+  }
+}
+
+/* prevents contents from overflowing the table's container and causing vertical scroll */
+.iv-table-row:last-child .iv-table-cell:after {
+  @apply hidden;
+}
+
+/* code blocks in tables have no background or padding */
+.iv-table .iv-code-block pre {
+  @apply m-0;
+}
+.iv-table .prose > pre {
+  @apply py-3;
+}
+.iv-table .prose > pre:only-child {
+  @apply p-0;
+}
+
+.iv-table .iv-table-cell[data-highlight-color] {
+  /* show color-tinted borders above the default color so e.g. a single row has tinted top/bottom borders */
+  @apply before:z-[1] after:z-[1];
+
+  a {
+    color: inherit;
+  }
+  a:hover {
+    @apply opacity-70;
+  }
+  code {
+    @apply bg-transparent border-transparent;
+  }
+}
+.iv-table .table-row.invisible + .table-row .iv-table-cell {
+  @apply before:hidden;
+}
+
+/* Note: the before/after colors are bg-*color*-900 with an opacity of 0.7 on a white background. */
+/* We can't use actual opacity for those because of overlapping borders so they must be fully translucent. */
+/* https://play.tailwindcss.com/qvvVRr5A4g */
+
+.iv-table .iv-table-cell[data-highlight-color='red'] {
+  --color-cell-bg: #fef6f6;
+  @apply bg-red-50/70 text-red-900/90;
+  @apply before:bg-[#f6efef] after:bg-[#f6efef] border-r-[#f2e8e8];
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    @apply text-red-900;
+  }
+  a {
+    @apply decoration-red-900/20;
+  }
+  hr {
+    @apply bg-red-900/20;
+  }
+  blockquote {
+    @apply border-l-red-900/20;
+  }
+}
+
+.iv-table .iv-table-cell[data-highlight-color='orange'] {
+  --color-cell-bg: #fff9f2;
+  @apply bg-orange-50/70 text-orange-900/90;
+  @apply before:bg-[#f6f0ee] after:bg-[#f6f0ee];
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    @apply text-orange-900;
+  }
+  a {
+    @apply decoration-orange-900/20;
+  }
+  hr {
+    @apply bg-orange-900/20;
+  }
+  blockquote {
+    @apply border-l-orange-900/20;
+  }
+}
+
+.iv-table .iv-table-cell[data-highlight-color='yellow'] {
+  --color-cell-bg: #fffcf1;
+  @apply bg-amber-50/70 text-amber-900/90;
+  @apply before:bg-[#f6f1ee] after:bg-[#f6f1ee];
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    @apply text-amber-900;
+  }
+  a {
+    @apply decoration-amber-900/20;
+  }
+  hr {
+    @apply bg-amber-900/20;
+  }
+  blockquote {
+    @apply border-l-amber-900/20;
+  }
+}
+
+.iv-table .iv-table-cell[data-highlight-color='green'] {
+  --color-cell-bg: #f4fef7;
+  @apply bg-green-50/70 text-green-900/90;
+  @apply before:bg-[#eff3f0] after:bg-[#eff3f0];
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    @apply text-green-900;
+  }
+  a {
+    @apply decoration-green-900/20;
+  }
+  hr {
+    @apply bg-green-900/20;
+  }
+  blockquote {
+    @apply border-l-green-900/20;
+  }
+}
+
+.iv-table .iv-table-cell[data-highlight-color='blue'] {
+  --color-cell-bg: #f4f9ff;
+  @apply bg-blue-50/70 text-blue-900/90;
+  @apply before:bg-[#eff1f7] after:bg-[#eff1f7];
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    @apply text-blue-900;
+  }
+  a {
+    @apply decoration-blue-900/20;
+  }
+  hr {
+    @apply bg-blue-900/20;
+  }
+  blockquote {
+    @apply border-l-blue-900/20;
+  }
+}
+
+.iv-table .iv-table-cell[data-highlight-color='purple'] {
+  --color-cell-bg: #fbf8ff;
+  @apply bg-purple-50/70 text-purple-900/90;
+  @apply before:bg-[#f3eff7] after:bg-[#f3eff7];
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    @apply text-purple-900;
+  }
+  a {
+    @apply decoration-purple-900/20;
+  }
+  hr {
+    @apply bg-purple-900/20;
+  }
+  blockquote {
+    @apply border-l-purple-900/20;
+  }
+}
+
+.iv-table .iv-table-cell[data-highlight-color='pink'] {
+  --color-cell-bg: #fef6fa;
+  @apply bg-pink-50/70 text-pink-900/90;
+  @apply before:bg-[#f6eff2] after:bg-[#f6eff2];
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    @apply text-pink-900;
+  }
+  a {
+    @apply decoration-pink-900/20;
+  }
+  hr {
+    @apply bg-pink-900/20;
+  }
+  blockquote {
+    @apply border-l-pink-900/20;
+  }
+}
+
+.iv-table .iv-table-cell[data-highlight-color='gray'] {
+  --color-cell-bg: #fbfbfc;
+  @apply bg-gray-50/70 text-gray-400;
+  @apply before:bg-[#eeeff0] after:bg-[#eeeff0];
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    @apply text-gray-900;
+  }
+  a {
+    @apply decoration-gray-900/20;
+  }
+  hr {
+    @apply bg-gray-900/20;
+  }
+  blockquote {
+    @apply border-l-gray-900/20;
+  }
+}

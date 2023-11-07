@@ -1,0 +1,5 @@
+-- AlterEnum
+ALTER TYPE "ActionAccessLevel" ADD VALUE 'ADMINISTRATOR';
+
+-- AlterEnum
+ALTER TYPE "UserAccessPermission" ADD VALUE 'READ_ORG_PROD_TRANSACTIONS';

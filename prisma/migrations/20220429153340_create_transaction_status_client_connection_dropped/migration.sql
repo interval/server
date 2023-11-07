@@ -1,0 +1,2 @@
+-- AlterEnum
+ALTER TYPE "TransactionStatus" ADD VALUE 'CLIENT_CONNECTION_DROPPED';

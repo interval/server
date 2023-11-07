@@ -1,0 +1,109 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import './combobox.scss';
+@import './context-menu.css';
+@import './forms.scss';
+@import '../components/HighlightedCodeBlock/editorTheme.scss';
+@import '../components/IVDatePicker/datepicker.scss';
+@import '../components/IVDialog/dialog.css';
+@import '../components/DropdownMenu/dropdown.css';
+@import '../components/IVRichTextEditor/iv-rich-text-editor.css';
+@import '../components/IVTable/table.css';
+@import '../components/IVTooltip/tooltip.css';
+@import 'tailwindcss/utilities';
+
+strong {
+  font-weight: 600;
+}
+
+@layer components {
+  .h1 {
+    @apply text-2xl font-bold leading-7 text-gray-900 sm:text-3xl tracking-tight;
+  }
+  .h2 {
+    @apply text-xl font-bold leading-7 text-gray-900 sm:text-2xl tracking-tight;
+  }
+  .h3 {
+    @apply text-lg font-medium leading-7 text-gray-900 sm:text-xl tracking-tight;
+  }
+  .h4 {
+    @apply text-lg font-semibold leading-7 text-gray-900;
+    letter-spacing: -0.015em;
+  }
+
+  .dashboard-container {
+    @apply p-4 sm:p-6;
+  }
+
+  @screen lg {
+    .iv-dashboard-v2-container .iv-full-page-spinner {
+      @apply left-0;
+    }
+  }
+
+  .iv-dashboard-v2-container {
+    grid-template-areas: 'navbar' 'main';
+  }
+
+  .iv-field-focus {
+    @apply ring-2 border-primary-500 outline-0 outline-none ring-primary-200;
+  }
+  .iv-field-focus--error {
+    @apply ring-2 border-amber-600 ring-orange-200;
+  }
+
+  /* source: https://css-tricks.com/snippets/css/prevent-long-urls-from-breaking-out-of-container/ */
+  .hyphenate {
+    /* Careful, this breaks the word wherever it is without a hyphen */
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    /* Adds a hyphen where the word breaks */
+    hyphens: auto;
+  }
+}
+
+/* necessary for style{} prop on ToastBar. */
+/* tailwind will remove these if you put them in the config file, since the minifier won't pick them up there. */
+@keyframes toast-enter {
+  0% {
+    opacity: 0.5;
+    transform: translate3d(0, -50%, 0);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes toast-leave {
+  0% {
+    opacity: 1;
+    transform: translate3d(0, 0, 1px);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(0, -50%, 1px);
+  }
+}
+
+/* Tailwind arbitrary values doesn't work with backticks */
+.backtick-escaped::before,
+.backtick-escaped::after {
+  content: '`';
+}
+
+.iv-org-switcher > div,
+.iv-org-switcher[data-leave] > div {
+  @apply opacity-0 transition-all duration-150 mt-1;
+}
+.iv-org-switcher[data-enter] > div {
+  @apply opacity-100;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE */
+  scrollbar-width: none; /* Firefox */
+}

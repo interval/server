@@ -1,0 +1,2 @@
+-- AlterEnum
+ALTER TYPE "ConfiguredFeatureFlag" ADD VALUE 'TRANSACTION_AUTO_CONTINUE';

@@ -1,0 +1,11 @@
+{
+  "icons": {
+    "icons8-copy.svg": "Clipboard",
+    "icons8-secured-letter.svg": "Mail",
+    "icons8-done.svg": "Check",
+    "icons8-insert-row-above.svg": "AddRowAbove",
+    "icons8-high-priority.svg": "ExclamationWarn",
+    "icons8-medium-icons.svg": "Actions",
+    "icons8-delivery-time.svg": "Schedule"
+  }
+}

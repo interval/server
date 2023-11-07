@@ -1,0 +1,7 @@
+.iv-menu > div,
+.iv-menu[data-leave] > div {
+  @apply opacity-0 -translate-y-2 transition-all duration-150 mt-1;
+}
+.iv-menu[data-enter] > div {
+  @apply opacity-100 translate-y-0;
+}
