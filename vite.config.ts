@@ -6,7 +6,7 @@ import postcss from './postcss.config'
 import env from './env'
 
 // https://vitejs.dev/config/
-export default defineConfig(async ({ command }) => {
+export default defineConfig(async () => {
   const mdx = await import('@mdx-js/rollup').then(r => r.default)
   const rehypeHighlight = await import('rehype-highlight').then(r => r.default)
 
