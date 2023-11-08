@@ -10,7 +10,7 @@ import trpcRouter from './trpc'
 import healthCheckRouter from './healthCheck'
 import requestLogger from './middleware/requestLogger'
 import { clearDomainlessCookie, sessionMiddleware } from './auth'
-import env from 'env'
+import env from '~/env'
 
 import { logger } from './utils/logger'
 
@@ -56,13 +56,13 @@ if (isProduction || !!process.env.TESTING_PROXY_SERVER) {
   for (const asset of assets) {
     app.use(
       `/${asset}`,
-      express.static(path.join(__dirname, `../../app/${asset}`))
+      express.static(path.join(__dirname, `../../client/${asset}`))
     )
   }
 
   // Handle client-side routing, return all requests to the app
   app.get('*', async (_, response) => {
-    response.sendFile(path.join(__dirname, '../../app/index.html'))
+    response.sendFile(path.join(__dirname, '../../client/index.html'))
   })
 }
 

@@ -1,7 +1,7 @@
 // an interval app inside interval 🌌 🧠
 
 import IntervalBeta from '@interval/sdk-latest/dist/experimental'
-import env from 'env'
+import env from '~/env'
 import path from 'path'
 
 export const interval = new IntervalBeta({

@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express'
-import env from 'env'
+import env from '~/env'
 import { workos, isWorkOSEnabled, REDIRECT_URI } from '.'
 import { logger } from '~/server/utils/logger'
 

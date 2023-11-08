@@ -4,7 +4,7 @@ import preview from 'preview-email'
 import fs from 'fs'
 import path from 'path'
 import { ServerClient as PostmarkClient } from 'postmark'
-import env from 'env'
+import env from '~/env'
 import { logger } from '~/server/utils/logger'
 
 const TEMPLATES_FOLDER = path.join(

@@ -1,6 +1,6 @@
 import fetch from 'cross-fetch'
 
-import env from 'env'
+import env from '~/env'
 import { encryptPassword } from '../auth'
 import { port } from '~/wss/consts'
 

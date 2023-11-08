@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { WebSocket } from 'ws'
 import prisma from './prisma'
-import env from 'env'
+import env from '~/env'
 
 const router = Router()
 

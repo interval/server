@@ -1,5 +1,5 @@
 import express from 'express'
-import env from 'env'
+import env from '~/env'
 import { logger } from '~/server/utils/logger'
 import {
   WebhookDirectoryUser,

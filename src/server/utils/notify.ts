@@ -1,4 +1,4 @@
-import env from 'env'
+import env from '~/env'
 import { actionNotification, emailNotification } from '~/emails'
 import prisma from '~/server/prisma'
 import {

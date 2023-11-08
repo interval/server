@@ -41,7 +41,7 @@ import {
   validateSession,
   loginWithApiKey,
 } from '../server/auth'
-import env from 'env'
+import env from '~/env'
 import { isBackgroundable } from '../utils/actions'
 import { getQueuedActionParams } from '../utils/queuedActions'
 import { parseActionResult } from '../utils/parseActionResult'

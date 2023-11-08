@@ -3,7 +3,7 @@
  * (for manipulating memory, etc.)
  */
 import Interval, { Page, Layout } from '@interval/sdk-latest'
-import env from 'env'
+import env from '~/env'
 import prisma from '~/server/prisma'
 import { getName } from '~/utils/actions'
 import { actionScheduleToDescriptiveString } from '~/utils/actionSchedule'

@@ -2,7 +2,7 @@ import express from 'express'
 import auth from './auth'
 import callback from './callback'
 import signInWithGoogle from './sign-in-with-google'
-import env from 'env'
+import env from '~/env'
 
 export { workos, isWorkOSEnabled } from '~/server/auth'
 export const REDIRECT_URI = `${env.APP_URL}/api/auth/sso/callback`

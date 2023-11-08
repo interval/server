@@ -19,7 +19,7 @@
     "esModuleInterop": true,
     "module": "ES2020",
     "paths": {
-      "env": ["./env.ts"],
+      "env": ["src/env.ts"],
       "~/*": ["./src/*"],
       "server/*": ["./src/server"]
     }

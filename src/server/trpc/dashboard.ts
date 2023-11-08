@@ -14,7 +14,7 @@ import {
   actionMetadataWithAccesses,
 } from '../utils/actions'
 import { getDevKey } from '~/server/utils/apiKey'
-import env from 'env'
+import env from '~/env'
 import { isWorkOSEnabled } from '~/server/auth'
 
 export const dashboardRouter = createRouter()

@@ -1,5 +1,5 @@
 import express, { Request, Response, NextFunction } from 'express'
-import env from 'env'
+import env from '~/env'
 import { z } from 'zod'
 import { logger } from '~/server/utils/logger'
 import prisma from '~/server/prisma'

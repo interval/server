@@ -11,7 +11,7 @@ import WorkOS from '@workos-inc/node'
 import type { NextFunction, Request, Response } from 'express'
 
 // Must be relative because this file is imported from server.ts
-import env from 'env'
+import env from '~/env'
 import prisma from './prisma'
 import { AUTH_COOKIE_NAME } from '../utils/isomorphicConsts'
 import { ironSession } from 'iron-session/express'

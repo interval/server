@@ -2,7 +2,7 @@ import prisma from '~/server/prisma'
 import type { Request, Response } from 'express'
 import fetch from 'node-fetch'
 import { URLSearchParams } from 'url'
-import env from 'env'
+import env from '~/env'
 import { logger } from '~/server/utils/logger'
 
 const SLACK_OAUTH_ACCESS_URL = 'https://slack.com/api/oauth.v2.access'

@@ -1,7 +1,7 @@
 import type { Request, Response } from 'express'
 import { Prisma, UserOrganizationInvitation } from '@prisma/client'
 import prisma from '~/server/prisma'
-import env from 'env'
+import env from '~/env'
 import { workos, isWorkOSEnabled } from '.'
 import { createUserSession, requiredIdentityConfirmation } from '~/server/auth'
 import { generateSlug, getCollisionSafeSlug } from '~/server/utils/slugs'

@@ -25,7 +25,7 @@
     "build:client": "vite build",
     "check:server": "tsc --project tsconfig.server.json --noEmit",
     "check:wss": "tsc --project tsconfig.wss.json --noEmit",
-    "build": "prisma generate && yarn build:server && yarn build:wss && yarn build:client",
+    "build": "rm -rf dist && prisma generate && yarn build:server && yarn build:wss && yarn build:client",
     "preview": "vite preview",
     "start:server": "NODE_ENV=production TS_NODE_BASEURL=./dist node -r tsconfig-paths/register ./dist/src/server/index.js",
     "start:wss": "NODE_ENV=production TS_NODE_BASEURL=./dist node -r tsconfig-paths/register ./dist/src/wss/index.js",

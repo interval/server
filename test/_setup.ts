@@ -5,7 +5,7 @@ import {
   PrismaClient,
 } from '@prisma/client'
 import { createUser } from '~/server/user'
-import env from '../env'
+import env from '../src/env'
 import setupHost, { getLocalConfig } from './releases'
 import { encryptPassword } from '~/server/auth'
 import {

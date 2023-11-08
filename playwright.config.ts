@@ -1,6 +1,6 @@
 import os from 'os'
 import { PlaywrightTestConfig, devices } from '@playwright/test'
-import env from './env'
+import env from './src/env'
 
 const config: PlaywrightTestConfig = {
   globalSetup: require.resolve('./test/_setup.ts'),

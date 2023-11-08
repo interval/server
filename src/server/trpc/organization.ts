@@ -9,7 +9,7 @@ import {
 import { hasPermission } from '~/utils/permissions'
 import { inviteNewUser } from '~/emails'
 import { createOrganization, isSlugAvailable } from '../utils/organizations'
-import env from 'env'
+import env from '~/env'
 import { nanoid } from 'nanoid'
 import {
   getChannelsFromSlackIntegration,

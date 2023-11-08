@@ -14,7 +14,7 @@ import { uploadsRouter } from './uploads'
 import { httpHostsRouter } from './httpHosts'
 import { environmentsRouter } from './environments'
 import { logger } from '~/server/utils/logger'
-import env from 'env'
+import env from '~/env'
 
 const appRouter = createRouter()
   .transformer(transformer)
