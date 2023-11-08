@@ -1,5 +1,6 @@
 {
   "name": "interval-server",
+  "description": "Interval Server is the central server for Interval apps",
   "version": "1.0.0-dev-0",
   "license": "MIT",
   "engines": {
