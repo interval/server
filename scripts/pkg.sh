@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e # Any subsequent(*) commands which fail will cause the shell script to exit immediately
 
-# yarn build
+yarn build
 
 rm -rf release
 mkdir release
