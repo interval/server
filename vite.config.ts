@@ -3,7 +3,6 @@ import { defineConfig, HttpProxy, splitVendorChunkPlugin } from 'vite'
 import react from '@vitejs/plugin-react'
 import nodeResolve from '@rollup/plugin-node-resolve'
 import postcss from './postcss.config'
-import env from './env'
 
 // https://vitejs.dev/config/
 export default defineConfig(async () => {
@@ -12,7 +11,6 @@ export default defineConfig(async () => {
 
   return {
     define: {
-      'process.env.APP_URL': JSON.stringify(env.APP_URL),
       'process.env.GIT_COMMIT': JSON.stringify(process.env.GIT_COMMIT),
     },
     plugins: [
