@@ -1,4 +1,4 @@
-import { MenuItem } from '@interval/sdk-latest/dist/types'
+import { MenuItem } from '@interval/sdk/dist/types'
 import { Organization, OrganizationSSO } from '@prisma/client'
 
 export default function orgRowMenuItems(

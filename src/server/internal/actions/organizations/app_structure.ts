@@ -1,5 +1,5 @@
 import { getName } from '~/utils/actions'
-import { ctx, io, Action } from '@interval/sdk-latest'
+import { ctx, io, Action } from '@interval/sdk'
 import prisma from '~/server/prisma'
 import {
   getAllActionGroups,

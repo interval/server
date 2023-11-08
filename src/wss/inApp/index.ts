@@ -2,7 +2,7 @@
  * Internal actions that need access to the live app server
  * (for manipulating memory, etc.)
  */
-import Interval, { Page, Layout } from '@interval/sdk-latest'
+import Interval, { Page, Layout } from '@interval/sdk'
 import env from '~/env'
 import prisma from '~/server/prisma'
 import { getName } from '~/utils/actions'

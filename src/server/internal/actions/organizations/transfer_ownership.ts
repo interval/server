@@ -1,4 +1,4 @@
-import { io, Action } from '@interval/sdk-latest'
+import { io, Action } from '@interval/sdk'
 import prisma from '~/server/prisma'
 import findUsers from '../../helpers/findUsers'
 import renderUserResult from '../../helpers/renderUserResult'

@@ -1,4 +1,4 @@
-import { io } from '@interval/sdk-latest'
+import { io } from '@interval/sdk'
 import { Prisma } from '@prisma/client'
 
 import prisma from '~/server/prisma'

@@ -1,6 +1,6 @@
 // Don't use this with any query strings that aren't static
 
-import { io } from '@interval/sdk-latest'
+import { io } from '@interval/sdk'
 import prisma from '~/server/prisma'
 
 export default async function staticQuery(query: string) {

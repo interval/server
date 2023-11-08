@@ -1,4 +1,4 @@
-import { io } from '@interval/sdk-latest'
+import { io } from '@interval/sdk'
 import findUsers from './findUsers'
 import renderUserResult from './renderUserResult'
 

@@ -1,4 +1,4 @@
-import { io, Action } from '@interval/sdk-latest'
+import { io, Action } from '@interval/sdk'
 import prisma from '~/server/prisma'
 import { UX_FEATURE_FLAGS } from '~/utils/featureFlags'
 import { featureFlagToString } from '~/utils/text'

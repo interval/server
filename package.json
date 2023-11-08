@@ -40,8 +40,7 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.109.0",
     "@aws-sdk/s3-request-presigner": "^3.109.0",
-    "@interval/sdk": "file:/Users/alex/dev/interval/interval/sdk-js",
-    "@interval/sdk-latest": "file:/Users/alex/dev/interval/interval/sdk-js",
+    "@interval/sdk": "1.6.0-dev0",
     "@prisma/client": "^5.3.0",
     "prisma": "^5.3.0",
     "@trpc/client": "^9.16.0",

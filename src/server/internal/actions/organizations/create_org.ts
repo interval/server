@@ -1,4 +1,4 @@
-import { io, Action } from '@interval/sdk-latest'
+import { io, Action } from '@interval/sdk'
 import prisma from '~/server/prisma'
 import { createOrganization } from '~/server/utils/organizations'
 import { isOrgSlugValid } from '~/utils/validate'

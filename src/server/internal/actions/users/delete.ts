@@ -1,4 +1,4 @@
-import { io, Action } from '@interval/sdk-latest'
+import { io, Action } from '@interval/sdk'
 import { PrismaPromise, User } from '@prisma/client'
 import prisma from '~/server/prisma'
 import findUsers from '../../helpers/findUsers'

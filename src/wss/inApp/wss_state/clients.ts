@@ -1,4 +1,4 @@
-import { io, ctx, Action, Page, Layout } from '@interval/sdk-latest'
+import { io, ctx, Action, Page, Layout } from '@interval/sdk'
 import {
   blockedWsIds,
   connectedClients,

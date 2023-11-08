@@ -1,4 +1,4 @@
-import { ctx, io, Layout, Page } from '@interval/sdk-latest'
+import { ctx, io, Layout, Page } from '@interval/sdk'
 import { z } from 'zod'
 import prisma from '~/server/prisma'
 import { EXPOSED_ROLES } from '~/utils/permissions'

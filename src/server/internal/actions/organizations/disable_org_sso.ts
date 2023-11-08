@@ -1,4 +1,4 @@
-import { io, Action } from '@interval/sdk-latest'
+import { io, Action } from '@interval/sdk'
 import prisma from '~/server/prisma'
 import { getPrimaryRole, EXPOSED_ROLES } from '~/utils/permissions'
 import { userAccessPermissionToString } from '~/utils/text'

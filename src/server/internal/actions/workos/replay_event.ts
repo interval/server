@@ -1,4 +1,4 @@
-import { Action, io } from '@interval/sdk-latest'
+import { Action, io } from '@interval/sdk'
 import { Webhook } from '@workos-inc/node'
 import { handleWebhook } from '~/server/api/workosWebhooks'
 

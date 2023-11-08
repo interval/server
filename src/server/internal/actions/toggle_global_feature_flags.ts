@@ -1,4 +1,4 @@
-import { io, Action } from '@interval/sdk-latest'
+import { io, Action } from '@interval/sdk'
 import { ConfiguredFeatureFlag } from '@prisma/client'
 import prisma from '~/server/prisma'
 import { FEATURE_FLAG_DEFAULTS } from '~/utils/featureFlags'

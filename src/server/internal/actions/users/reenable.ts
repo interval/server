@@ -1,4 +1,4 @@
-import { io, ctx, Action } from '@interval/sdk-latest'
+import { io, ctx, Action } from '@interval/sdk'
 import prisma from '~/server/prisma'
 
 export default new Action({

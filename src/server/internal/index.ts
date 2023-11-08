@@ -1,6 +1,6 @@
 // an interval app inside interval 🌌 🧠
 
-import IntervalBeta from '@interval/sdk-latest/dist/experimental'
+import IntervalBeta from '@interval/sdk/dist/experimental'
 import env from '~/env'
 import path from 'path'
 

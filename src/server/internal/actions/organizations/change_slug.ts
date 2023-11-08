@@ -1,4 +1,4 @@
-import { io, Action } from '@interval/sdk-latest'
+import { io, Action } from '@interval/sdk'
 import prisma from '~/server/prisma'
 import { dashboardL1Paths } from '~/server/utils/routes'
 import { isOrgSlugValid } from '~/utils/validate'

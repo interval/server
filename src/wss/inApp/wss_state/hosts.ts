@@ -1,4 +1,4 @@
-import { io, ctx, Action, Page, Layout } from '@interval/sdk-latest'
+import { io, ctx, Action, Page, Layout } from '@interval/sdk'
 import { blockedWsIds, connectedHosts, apiKeyHostIds } from '~/wss/processVars'
 import prisma from '~/server/prisma'
 import { logger } from '~/server/utils/logger'

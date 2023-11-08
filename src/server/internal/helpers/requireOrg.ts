@@ -1,4 +1,4 @@
-import { ctx } from '@interval/sdk-latest/dist/experimental'
+import { ctx } from '@interval/sdk/dist/experimental'
 import prisma from '~/server/prisma'
 import selectOrganization from './selectOrganization'
 

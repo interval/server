@@ -1,4 +1,4 @@
-import { ctx } from '@interval/sdk-latest'
+import { ctx } from '@interval/sdk'
 
 export default function requireParam(key: string) {
   if (ctx.params[key] === undefined) {
