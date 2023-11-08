@@ -24,3 +24,6 @@ test/results
 build-oss.sh
 
 *.tsbuildinfo
+
+release
+release.tar.gz
