@@ -10,7 +10,7 @@ import IconCancel from '~/icons/compiled/Cancel'
 import { statusEnumToString } from '~/utils/text'
 import { ActionMode } from '~/utils/types'
 import { useParams } from 'react-router-dom'
-import { extractOrgSlug } from '~/utils/organization'
+import { extractOrgSlug } from '~/utils/extractOrgSlug'
 import IconRedirect from '~/icons/compiled/Redirect'
 import useTransactionAutoScroll from '~/utils/useTransactionAutoScroll'
 

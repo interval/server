@@ -27,7 +27,8 @@ import {
   redirectAfterLogin,
 } from '~/components/LoginRedirect'
 import { dashboardL1Paths } from '~/App'
-import { extractOrgSlug, useOrgParams } from '~/utils/organization'
+import { useOrgParams } from '~/utils/organization'
+import { extractOrgSlug } from '~/utils/extractOrgSlug'
 import { KBarProvider } from 'kbar'
 import CommandBar, { DynamicCommandBarActions } from './CommandBar'
 import DashboardNav from './DashboardNav'

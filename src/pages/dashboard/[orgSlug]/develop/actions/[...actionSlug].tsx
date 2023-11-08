@@ -5,7 +5,7 @@ import useConsole from '~/components/TransactionUI/useConsole'
 import TransactionLayout, {
   PendingConnectionIndicator,
 } from '~/components/TransactionUI/_presentation/TransactionLayout'
-import { getQueuedActionId } from '~/utils/actions'
+import { getQueuedActionId } from '~/utils/getQueuedActionId'
 import ConsoleIndex from '~/components/Console'
 import { ActionGroup } from '@prisma/client'
 import useDashboardStructure from '~/utils/useDashboardStructure'

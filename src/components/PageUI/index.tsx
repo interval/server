@@ -5,7 +5,7 @@ import Layout from './Layout'
 import usePage from './usePage'
 import { ActionModeContext, StandaloneLoadingState } from '../TransactionUI'
 import { PendingConnectionIndicator } from '../TransactionUI/_presentation/TransactionLayout'
-import { useActionUrlBuilder } from '~/utils/actions'
+import { useActionUrlBuilder } from '~/utils/useActionUrlBuilder'
 import { RenderContextProvider } from '~/components/RenderContext'
 import ErrorState from '../TransactionUI/_presentation/ErrorState'
 

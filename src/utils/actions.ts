@@ -1,5 +1,4 @@
 import type { SerializableRecord } from '@interval/sdk/dist/ioSchema'
-import type { Location } from 'react-router-dom'
 import type {
   ActionMode,
   ActionWithPossibleMetadata,
@@ -18,8 +17,7 @@ import type {
   Prisma,
   ActionGroupMetadata,
 } from '@prisma/client'
-import { useCallback } from 'react'
-import { useOrgParams } from './organization'
+
 import { getOrgEnvSlug } from './environments'
 
 export const SLUG_VALID_TEXT =
@@ -312,25 +310,6 @@ export function getActionGroupAccessLevel({
   return { canRun: true, canView: true }
 }
 
-/**
- * Use history state to get queuedActionId to not clobber any
- * user-set search params.
- */
-export function getQueuedActionId(location: Location): string | undefined {
-  const state = location.state
-  if (
-    state &&
-    typeof state === 'object' &&
-    !Array.isArray(state) &&
-    'queuedActionId' in state
-  ) {
-    const newState = state as { queuedActionId: unknown }
-    if (typeof newState.queuedActionId === 'string') {
-      return newState.queuedActionId
-    }
-  }
-}
-
 export function getFullActionSlug({
   groupSlug,
   slug,
@@ -447,23 +426,6 @@ export function getActionUrl({
   }
 
   return absolute ? url.toString() : `${url.pathname}${url.search}`
-}
-
-export function useActionUrlBuilder(mode: ActionMode | 'anon-console') {
-  const { orgEnvSlug } = useOrgParams()
-
-  const actionUrlBuilder = useCallback(
-    params => {
-      return getActionUrl({
-        ...params,
-        orgEnvSlug,
-        mode,
-      })
-    },
-    [orgEnvSlug, mode]
-  )
-
-  return actionUrlBuilder
 }
 
 export function isBackgroundable(action: {

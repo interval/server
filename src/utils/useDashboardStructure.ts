@@ -11,7 +11,7 @@ import {
 } from './types'
 import { useParams } from 'react-router-dom'
 import usePrevious from './usePrevious'
-import { extractOrgSlug } from '~/utils/organization'
+import { extractOrgSlug } from '~/utils/extractOrgSlug'
 import { useDashboardOptional } from '~/components/DashboardContext'
 
 interface DashboardStructureProps {

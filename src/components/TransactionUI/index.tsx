@@ -14,7 +14,7 @@ import {
 } from './_presentation/LoadingState'
 import ConfirmIdentity from './ConfirmIdentity'
 import { PendingConnectionIndicator } from './_presentation/TransactionLayout'
-import { useActionUrlBuilder } from '~/utils/actions'
+import { useActionUrlBuilder } from '~/utils/useActionUrlBuilder'
 import { useUploadUrlFetcher } from '~/utils/uploads'
 import { ActionMode } from '~/utils/types'
 import useTransactionNavigationWarning from '~/utils/useTransactionNavigationWarning'

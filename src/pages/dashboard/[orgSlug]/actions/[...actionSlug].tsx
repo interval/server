@@ -7,7 +7,7 @@ import IconPuzzled from '~/icons/compiled/Puzzled'
 import TransactionLayout, {
   PendingConnectionIndicator,
 } from '~/components/TransactionUI/_presentation/TransactionLayout'
-import { getQueuedActionId } from '~/utils/actions'
+import { getQueuedActionId } from '~/utils/getQueuedActionId'
 import usePrevious from '~/utils/usePrevious'
 import { OrganizationDashboard } from '..'
 import { useStateFlagEnabled } from '~/utils/navigationHooks'
