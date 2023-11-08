@@ -70,6 +70,5 @@ app.listen(port, () => {
   const url = new URL(env.APP_URL)
   url.port = port.toString()
   logger.info(`📡 API server listening at ${url.toString()}`)
-  logger.info(``)
   logger.info(`🌎 Interval client ready at ${env.APP_URL}`)
 })

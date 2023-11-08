@@ -6,5 +6,5 @@
     "noEmit": false,
     "types": ["node", "jest"]
   },
-  "include": ["src/server/**/*"]
+  "include": ["src/server/**/*", "src/entry.ts"]
 }

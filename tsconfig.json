@@ -13,7 +13,6 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "types": ["@types/jest", "mdx"],
-    "incremental": true,
     "baseUrl": ".",
     "forceConsistentCasingInFileNames": true,
     "esModuleInterop": true,

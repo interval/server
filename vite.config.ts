@@ -39,7 +39,7 @@ export default defineConfig(async () => {
       },
       watch: {
         // prevent hot reloading when backend files change
-        ignored: ['**/src/server/**/*.ts', '**/env.ts'],
+        ignored: ['**/src/server/**/*.ts', '**/env.ts', '**/entry.ts'],
       },
     },
     resolve: {
