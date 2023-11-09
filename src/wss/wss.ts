@@ -1,4 +1,4 @@
-//@ts-nocheck
+//@ts-nocheck TODO: Does Jacob know why inputs isn't typed properly?
 import { WebSocketServer } from 'ws'
 import prisma from '../server/prisma'
 import { getClientIp } from 'request-ip'
