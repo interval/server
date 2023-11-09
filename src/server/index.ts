@@ -14,9 +14,13 @@ import env from '~/env'
 
 import { logger } from './utils/logger'
 
+const bundledIndexFilePath = path.join(__dirname, '../../client/index.html')
+
+const isBundled = fs.existsSync(bundledIndexFilePath)
+
 const isProduction = process.env.NODE_ENV === 'production'
 
-const port = isProduction ? 3000 : 3001
+const port = isBundled ? 3000 : 3001
 
 const app = express()
 app.use(requestLogger)
@@ -44,7 +48,7 @@ app.get('/api/system/reboot', (_req, res) => {
   res.sendStatus(200)
 })
 
-if (isProduction || !!process.env.TESTING_PROXY_SERVER) {
+if (isBundled) {
   const assets = [
     'app-assets',
     'favicon.png',
@@ -62,7 +66,7 @@ if (isProduction || !!process.env.TESTING_PROXY_SERVER) {
 
   // Handle client-side routing, return all requests to the app
   app.get('*', async (_, response) => {
-    response.sendFile(path.join(__dirname, '../../client/index.html'))
+    response.sendFile(bundledIndexFilePath)
   })
 }
 

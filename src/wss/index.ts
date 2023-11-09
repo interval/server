@@ -14,8 +14,6 @@ import { encryptPassword } from '~/server/auth'
 import { syncActionSchedules } from './actionSchedule'
 import { ALL_TIMEZONES } from '~/utils/timezones'
 
-// const isProduction = process.env.NODE_ENV === 'production'
-
 const app = express()
 app.use(requestLogger)
 
