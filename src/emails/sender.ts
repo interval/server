@@ -91,7 +91,7 @@ async function prepareEmail<T extends TemplateData>({
 
   const from = 'Interval <help@interval.com>'
   const subject = subjectBuilder(templateProps)
-  const html = await emailTemplate.render(template + '/html', emailRenderProps)
+  const html = await emailTemplate.render(template, emailRenderProps)
 
   return { from, to, html, subject }
 }
