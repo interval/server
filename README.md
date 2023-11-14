@@ -31,7 +31,7 @@ Interval Server is a pure Node.js application. Node.js version 16 or higher is r
 - `DATABASE_URL` is the Postgres connection string. It should follow the format `postgresql://username:password@host:port/dbname`.
 - `SECRET` is a secret that _you must provide_ for use in encrypting passwords. Any string is valid for this value, but you should use something secure!
 - `WSS_API_SECRET` is a secret that _you must provide_. It is used internally by Interval Server for communication between Interval services. Any string is valid for this value, but you should use something secure!
-- `AUTH_COOKIE_SECRET` is a secret that _you must provide_ for use in encrypting session cookies. Any string is valid for this value, but you should use something secure!
+- `AUTH_COOKIE_SECRET` is a secret that _you must provide_ for use in encrypting session cookies. Any string **at least 32 characters in length** is valid for this value, but you should use something secure!
 
 ### Ports
 
@@ -61,6 +61,8 @@ _Note:_ you don't _need_ to use a `.env` file. As long as the [required variable
 ## Running Interval Server in production
 
 Running Interval Server in production is largely the same as running in development. For convenience, we've created a Docker image to make this even easier.
+
+The Interval Server Docker image is: `docker.io/alexarena/interval-server:latest`.
 
 Many services [like Render](https://render.com/docs/deploy-an-image) make it trivial to deploy Docker images with just a few clicks.
 

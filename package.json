@@ -1,7 +1,7 @@
 {
-  "name": "interval-server",
+  "name": "@interval/server",
   "description": "Interval Server is the central server for Interval apps",
-  "version": "1.0.0-dev-3",
+  "version": "1.0.0-dev-4",
   "license": "MIT",
   "engines": {
     "node": ">=16"
@@ -9,7 +9,9 @@
   "prisma": {
     "seed": "ts-node --project tsconfig.server.json -r tsconfig-paths/register prisma/seed.ts"
   },
-  "bin": "dist/src/entry.js",
+  "bin": {
+    "interval-server": "dist/src/entry.js"
+  },
   "scripts": {
     "lint": "eslint src",
     "seed": "prisma db seed",
@@ -195,9 +197,6 @@
     "vite-tsconfig-paths": "^4.0.5",
     "xlsx": "^0.19.3",
     "react-router-dom": "6.3.x"
-  },
-  "publishConfig": {
-    "access": "restricted"
   },
   "resolutions": {
     "ts-node": "^10.9.1"
