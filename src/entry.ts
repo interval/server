@@ -1,15 +1,119 @@
 #!/usr/bin/env node
 /* eslint-env node */
-import { Command } from 'commander'
+import { Command, Option } from 'commander'
 import express from 'express'
 import http from 'http'
+import { SpawnOptionsWithoutStdio, spawn } from 'child_process'
 import { WebSocketServer } from 'ws'
 
-import { setupWebSocketServer } from './wss/wss'
-import './wss/index'
-import mainAppServer from './server/index'
 import { logger } from './server/utils/logger'
 import envVars from './env'
+import path from 'path'
+
+// __dirname
+// Dev: /Users/alex/dev/interval/server/dist/src
+// Release: /Users/alex/.nvm/versions/node/v18.18.1/lib/node_modules/interval-server/dist/src
+
+const projectRootDir = path.resolve(__dirname, '..', '..')
+
+function child(
+  cmd: string,
+  args: string[],
+  opts?: { silent?: boolean } & SpawnOptionsWithoutStdio
+) {
+  return new Promise<number>((resolve, reject) => {
+    const proc = spawn(cmd, args, opts)
+
+    proc.stdout.setEncoding('utf-8')
+    proc.stderr.setEncoding('utf-8')
+
+    proc.stdout.on('data', data => {
+      if (opts?.silent) return
+      logger.info(data.trim())
+    })
+
+    proc.stderr.on('data', data => {
+      if (opts?.silent) return
+      logger.error(data.trim())
+    })
+
+    proc.on('close', code => {
+      if (code === null) {
+        return reject(-1)
+      }
+      if (code > 0) {
+        return reject(code)
+      }
+      return resolve(0)
+    })
+  })
+}
+
+async function checkHasPsqlInstalled() {
+  try {
+    await child('which', ['psql'], { silent: true })
+    return true
+  } catch (e) {
+    return false
+  }
+}
+
+const initSql = `
+  CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
+  CREATE OR REPLACE FUNCTION nanoid(size int DEFAULT 21)
+  RETURNS text AS $$
+  DECLARE
+    id text := '';
+    i int := 0;
+    urlAlphabet char(64) := 'ModuleSymbhasOwnPr-0123456789ABCDEFGHNRVfgctiUvz_KqYTJkLxpZXIjQW';
+    bytes bytea := gen_random_bytes(size);
+    byte int;
+    pos int;
+  BEGIN
+    WHILE i < size LOOP
+      byte := get_byte(bytes, i);
+      pos := (byte & 63) + 1; -- + 1 because substr starts at 1 for some reason
+      id := id || substr(urlAlphabet, pos, 1);
+      i = i + 1;
+    END LOOP;
+    RETURN id;
+  END
+  $$ LANGUAGE PLPGSQL STABLE;
+`
+
+async function initDb(opts: { skipCreate?: boolean }) {
+  const u = new URL(envVars.DATABASE_URL)
+
+  const dbName = u.pathname.replace('/', '')
+  logger.info(`Will create database ${dbName} on host ${u.hostname}...`)
+
+  const isPsqlInstalled = await checkHasPsqlInstalled()
+  if (!isPsqlInstalled) {
+    logger.error(
+      'Cannot initialize a database without psql installed. Please install psql and try again.'
+    )
+    process.exit(1)
+  }
+
+  if (!opts.skipCreate) {
+    await child(
+      'psql',
+      [
+        ['-h', u.hostname],
+        ['-p', u.port],
+        ['-U', u.username],
+        '-c',
+        `CREATE database "${dbName}";`,
+      ].flat(),
+      { env: { PGPASSWORD: u.password, ...process.env } }
+    )
+  }
+
+  await child('psql', [envVars.DATABASE_URL, '-c', initSql])
+
+  await child('npx', ['-y', 'prisma', 'db', 'push'], { cwd: projectRootDir })
+}
 
 const program = new Command()
 
@@ -20,26 +124,46 @@ program
   .description('Interval Server is the central server for Interval apps')
   .option('-v, --verbose', 'verbose output')
   .addCommand(new Command('start').description('starts Interval Server'))
-  .addCommand(new Command('db-init'))
-
-const [cmd] = program.parse().args
-
-if (cmd === 'start') {
-  const app = express()
-
-  app.use(mainAppServer)
-
-  const server = http.createServer(app)
-
-  const wss = new WebSocketServer({ server, path: '/websocket' })
-  setupWebSocketServer(wss)
-
-  server.listen(envVars.PORT, () => {
-    logger.info(
-      `📡 Interval Server listening at http://localhost:${envVars.PORT}`
+  .addCommand(
+    new Command('db-init').addOption(
+      new Option(
+        '--skip-create',
+        'for when a database already exists, skip creating one'
+      )
     )
-  })
-} else if (cmd === 'db-init') {
-  // TODO: Implement db init command
-  console.log('Initializing a database...')
+  )
+
+const [cmd, ...args] = program.parse().args
+async function main() {
+  if (cmd === 'start') {
+    // start the internal web socket server
+    import('./wss/index')
+
+    const app = express()
+
+    const mainAppServer = (await import('./server/index')).default
+
+    app.use(mainAppServer)
+
+    const server = http.createServer(app)
+
+    const wss = new WebSocketServer({ server, path: '/websocket' })
+    const { setupWebSocketServer } = await import('./wss/wss')
+    setupWebSocketServer(wss)
+
+    server.listen(Number(envVars.PORT), () => {
+      logger.info(
+        `📡 Interval Server listening at http://localhost:${envVars.PORT}`
+      )
+    })
+  } else if (cmd === 'db-init') {
+    // TODO: Implement db init command
+    logger.info('Initializing a database...')
+    initDb({ skipCreate: args.includes('--skip-create') }).catch(() => {
+      logger.error(`Failed to initialize database.`)
+      process.exit(1)
+    })
+  }
 }
+
+main()

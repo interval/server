@@ -16,11 +16,7 @@ const schema = z.object({
   AUTH_COOKIE_SECRET: z.string(),
 
   GIT_COMMIT: z.string().optional(),
-  PORT: z
-    .string()
-    .optional()
-    .default('3000')
-    .transform(v => parseInt(v)),
+  PORT: z.string().optional().default('3000'),
 
   // emails
   POSTMARK_API_KEY: z.string().optional(),
