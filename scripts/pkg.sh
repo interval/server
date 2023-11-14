@@ -17,4 +17,4 @@ cp -r email-templates release/email-templates
 cp -r LICENSE release/license
 cp README.md release/README.md
 
-tar -czf release.tar.gz release
+# tar -czf release.tar.gz release
