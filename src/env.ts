@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import dotenv from 'dotenv'
+import { logger } from './server/utils/logger'
 
 try {
   dotenv.config()
@@ -9,8 +10,8 @@ try {
 
 const schema = z.object({
   // required for basic app functionality
-  APP_URL: z.string(),
-  DATABASE_URL: z.string(),
+  APP_URL: z.string(), // ex: http://localhost:3000
+  DATABASE_URL: z.string(), // ex: postgresql://username:password@host:port/dbname
   SECRET: z.string(),
   WSS_API_SECRET: z.string(),
   AUTH_COOKIE_SECRET: z.string(),
@@ -41,7 +42,16 @@ const schema = z.object({
   INTERNAL_TOOLS_API_KEY: z.string().optional(),
 })
 
-const validated = schema.parse(process.env)
+const possiblyValid = schema.safeParse(process.env)
+if (!possiblyValid.success) {
+  const missing = possiblyValid.error.issues.map(i => i.path).flat()
+  logger.error(
+    `Missing required environment variables: \n - ${missing.join('\n - ')}`
+  )
+  process.exit(1)
+}
+
+const validated = possiblyValid.data
 
 export default validated
 
