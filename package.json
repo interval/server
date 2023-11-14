@@ -29,7 +29,7 @@
     "client:preview": "vite preview",
     "client:storybook": "storybook dev -p 6006 --ci",
     "client:storybook:build": "storybook build",
-    "server:build": "tsc --project tsconfig.server.json && tsc-alias -p tsconfig.server.json && chmod +x ./dist/src/entry.js",
+    "server:build": "tsc --project tsconfig.server.json && tsc-alias -p tsconfig.server.json",
     "wss:build": "tsc --project tsconfig.wss.json  && tsc-alias -p tsconfig.wss.json",
     "test": "playwright test",
     "test:jest": "jest",
