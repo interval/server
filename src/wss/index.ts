@@ -9,7 +9,6 @@ import { Prisma } from '@prisma/client'
 import { serializableRecord } from '@interval/sdk/dist/ioSchema'
 import { port } from './consts'
 import requestLogger from '~/server/middleware/requestLogger'
-import './wss'
 import { encryptPassword } from '~/server/auth'
 import { syncActionSchedules } from './actionSchedule'
 import { ALL_TIMEZONES } from '~/utils/timezones'
@@ -236,5 +235,5 @@ app.listen(port, () => {
   const url = new URL(env.APP_URL)
   url.port = port.toString()
 
-  logger.info(`📡 WSS API Server listening at ${url.toString()}`)
+  logger.info(`📡 Internal WSS API Server listening at ${url.toString()}`)
 })

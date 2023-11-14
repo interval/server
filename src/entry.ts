@@ -1,9 +1,15 @@
 #!/usr/bin/env node
-
 /* eslint-env node */
+import { Command } from 'commander'
+import express from 'express'
+import http from 'http'
+import { WebSocketServer } from 'ws'
 
-import { Command, Argument } from 'commander'
+import { setupWebSocketServer } from './wss/wss'
+import './wss/index'
+import mainAppServer from './server/index'
 import { logger } from './server/utils/logger'
+import envVars from './env'
 
 const program = new Command()
 
@@ -13,27 +19,27 @@ program
   .name('interval-server')
   .description('Interval Server is the central server for Interval apps')
   .option('-v, --verbose', 'verbose output')
-  .addArgument(
-    new Argument('<services>', 'services to run').choices([
-      'all',
-      'server',
-      'wss',
-    ])
-  )
+  .addCommand(new Command('start').description('starts Interval Server'))
+  .addCommand(new Command('db-init'))
 
-const cmd = program.parse()
+const [cmd] = program.parse().args
 
-const service = cmd.args[0]
+if (cmd === 'start') {
+  const app = express()
 
-if (service === 'all') {
-  logger.warn(
-    'Running all services in a single process. This is not recommended for production deployments.'
-  )
-}
+  app.use(mainAppServer)
 
-if (service === 'all' || service === 'server') {
-  import('./server/index')
-}
-if (service === 'all' || service === 'wss') {
-  import('./wss/index')
+  const server = http.createServer(app)
+
+  const wss = new WebSocketServer({ server, path: '/websocket' })
+  setupWebSocketServer(wss)
+
+  server.listen(envVars.PORT, () => {
+    logger.info(
+      `📡 Interval Server listening at http://localhost:${envVars.PORT}`
+    )
+  })
+} else if (cmd === 'db-init') {
+  // TODO: Implement db init command
+  console.log('Initializing a database...')
 }

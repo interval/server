@@ -31,8 +31,7 @@ const RECONNECT_INTERVAL_MS = 2000
 function getWebSocketUrl(id?: string) {
   const u = new URL(window.location.toString())
   u.protocol = u.protocol.replace('http', 'ws')
-  u.port = '3002'
-  u.pathname = '/'
+  u.pathname = '/websocket'
   if (id) {
     u.searchParams.set(CLIENT_ISOCKET_ID_SEARCH_PARAM_KEY, id)
   }

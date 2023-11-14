@@ -2,9 +2,7 @@ import { z } from 'zod'
 import dotenv from 'dotenv'
 
 try {
-  dotenv.config({
-    debug: true,
-  })
+  dotenv.config()
 } catch (err) {
   console.error('Failed loading .env', err)
 }
@@ -18,6 +16,11 @@ const schema = z.object({
   AUTH_COOKIE_SECRET: z.string(),
 
   GIT_COMMIT: z.string().optional(),
+  PORT: z
+    .string()
+    .optional()
+    .default('3000')
+    .transform(v => parseInt(v)),
 
   // emails
   POSTMARK_API_KEY: z.string().optional(),
