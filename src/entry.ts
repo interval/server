@@ -1,14 +1,16 @@
 #!/usr/bin/env node
 /* eslint-env node */
 import { Command, Option } from 'commander'
+import dotenv from 'dotenv'
 import express from 'express'
 import http from 'http'
 import { SpawnOptionsWithoutStdio, spawn } from 'child_process'
 import { WebSocketServer } from 'ws'
 
 import { logger } from './server/utils/logger'
-import envVars from './env'
+// import envVars from './env'
 import path from 'path'
+import { z } from 'zod'
 
 // __dirname
 // Dev: /Users/alex/dev/interval/server/dist/src
@@ -82,7 +84,27 @@ const initSql = `
   $$ LANGUAGE PLPGSQL STABLE;
 `
 
+function loadDbUrlEnvVar() {
+  try {
+    dotenv.config()
+  } catch (err) {
+    console.error('Failed loading .env', err)
+  }
+
+  // only parse the the db URL so that this command can be run without other env vars being set.
+  try {
+    return z.object({ DATABASE_URL: z.string() }).parse(process.env)
+  } catch (e) {
+    return null
+  }
+}
+
 async function initDb(opts: { skipCreate?: boolean }) {
+  const envVars = loadDbUrlEnvVar()
+  if (!envVars) {
+    logger.error(`No DATABASE_URL environment variable was set.`)
+    process.exit(1)
+  }
   const u = new URL(envVars.DATABASE_URL)
 
   const dbName = u.pathname.replace('/', '')
@@ -136,6 +158,7 @@ program
 const [cmd, ...args] = program.parse().args
 async function main() {
   if (cmd === 'start') {
+    const envVars = (await import('./env')).default
     // start the internal web socket server
     import('./wss/index')
 
