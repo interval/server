@@ -1,2 +1,0 @@
--- AlterEnum
-ALTER TYPE "ConfiguredFeatureFlag" ADD VALUE 'ORG_ENVIRONMENTS_ENABLED';

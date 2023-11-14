@@ -1,2 +1,0 @@
--- AlterEnum
-ALTER TYPE "ConfiguredFeatureFlag" ADD VALUE 'ACTION_METADATA_GENERAL_CONFIG';

@@ -19,15 +19,3 @@ BEGIN
   RETURN id;
 END
 $$ LANGUAGE PLPGSQL STABLE;
-
--- AlterTable
-ALTER TABLE "ApiKey" ALTER COLUMN "id" SET DEFAULT nanoid();
-
--- AlterTable
-ALTER TABLE "Organization" ALTER COLUMN "id" SET DEFAULT nanoid();
-
--- AlterTable
-ALTER TABLE "User" ALTER COLUMN "id" SET DEFAULT nanoid();
-
--- AlterTable
-ALTER TABLE "UserOrganizationAccess" ALTER COLUMN "id" SET DEFAULT nanoid();
