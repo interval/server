@@ -2,15 +2,21 @@
 
 Interval Server is the central node used to run applications developed with the [Interval SDK](https://github.com/interval/interval-node).
 
-**Note:** Previously Interval Server was only available as a closed-source cloud service. Now, it is possible to run an instance yourself. This is a new direction for the Interval project and the fully open-source/self-hosted Interval Server application is still in early phases of development. If you encounter an issues setting up an Interval Server instance, please let us know by opening an issue!
+**🚧 Note:** Previously Interval Server was only available as a closed-source cloud service. Now, it is possible to run an instance yourself. This is a new direction for the Interval project and the fully open-source/self-hosted Interval Server application is still in early phases of development. If you encounter an issues setting up an Interval Server instance, please let us know by opening an issue!
 
 ## Pre-requisites
 
 ### Required dependencies
 
+#### Database
+
 Interval Server requires a Postgres database to work. In the future, especially for local development, we may ease this requirement.
 
 We have tested Interval Server with Postgres versions 11.x and 12.x. Newer versions should work, but we do not plan to support anything older than 11.x.
+
+#### Node.js
+
+Interval Server is a pure Node.js application. Node.js version 16 or higher is required to run Interval Server.
 
 ### Optional dependencies
 
@@ -26,6 +32,10 @@ We have tested Interval Server with Postgres versions 11.x and 12.x. Newer versi
 - `SECRET` is a secret that _you must provide_ for use in encrypting passwords. Any string is valid for this value, but you should use something secure!
 - `WSS_API_SECRET` is a secret that _you must provide_. It is used internally by Interval Server for communication between Interval services. Any string is valid for this value, but you should use something secure!
 - `AUTH_COOKIE_SECRET` is a secret that _you must provide_ for use in encrypting session cookies. Any string is valid for this value, but you should use something secure!
+
+### Ports
+
+Interval Server runs services on ports `3000` and `3033`. The main service runs on `3000`.
 
 ## Running Interval Server locally
 
@@ -43,3 +53,35 @@ WSS_API_SECRET=<YOUR WSS API SECRET>
 ```
 
 _Note:_ you don't _need_ to use a `.env` file. As long as the [required variables](#required-environment-variables) are set, you should be good to go.
+
+3. If you _have not_ already setup a database, run `interval-server db-init` to initialize one.
+4. Run `interval-server start` to run `interval-server`.
+5. 🎉 Visit http://localhost:3000 to access your Interval Server!
+
+## Running Interval Server in production
+
+Running Interval Server in production is largely the same as running in development. For convenience, we've created a Docker image to make this even easier.
+
+Many services [like Render](https://render.com/docs/deploy-an-image) make it trivial to deploy Docker images with just a few clicks.
+
+Important things to know:
+
+- You'll still need to provide all [required environment variables](#required-environment-variables) when running the Interval Server Docker image.
+- Hosting providers like Render will automatically discover the Interval Server service running on port 3000 and will expose this port for you, but if your hosting provider doesn't do this, you'll have to handle exposing this yourself.
+
+## Connecting to Interval Server from your app
+
+Once your Interval Server instance is up and running, it's trivial to connect to it from your Interval apps. Just add an `endpoint` property pointing to your Interval Server instance to the Interval SDK's constructor. For example:
+
+```js
+const interval = new Interval({
+  apiKey: process.env.INTERVAL_KEY,
+  endpoint: 'wss://<YOUR INTERVAL SERVER URL>/websocket', // Don't forget the /websocket path!
+})
+```
+
+**Note:** if you're running Interval Server locally, this URL will use the insecure `ws://` protocol, _not_ the secure `wss://` version used in production deployments.
+
+## Contributing
+
+For our initial release, we're focused on making it easy to setup and run your own Interval Server instance. We'll make it easier to contribute (and document how you can) in the future, but for now we aren't actively soliciting new contributions.
