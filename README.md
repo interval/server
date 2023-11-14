@@ -42,4 +42,4 @@ AUTH_COOKIE_SECRET=<YOUR AUTH COOKIE SECRET>
 WSS_API_SECRET=<YOUR WSS API SECRET>
 ```
 
-_Note:_ you don't _need_ to use a `.env` file. As long as the [required variables](## Required environment variables) are set, you should be good to go.
+_Note:_ you don't _need_ to use a `.env` file. As long as the [required variables](#required-environment-variables) are set, you should be good to go.
