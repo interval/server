@@ -82,6 +82,24 @@ const interval = new Interval({
 
 **Note:** if you're running Interval Server locally, this URL will use the insecure `ws://` protocol, _not_ the secure `wss://` version used in production deployments.
 
+## Available interval-server commands
+
+Once you run `npm i -g @interval/server`, the following commands are available:
+
+### `interval-server start`
+
+Starts Interval Server. See above for information on running Interval Server locally or in production.
+
+### `interval-server db-init`
+
+Creates and sets up an Postgres database for use with Interval Server.
+
+[psql](https://www.postgresql.org/docs/7.0/app-psql.htm) must be installed for this command to work.
+
+You must provide a `DATABASE_URL` environment variable of the form `postgresql://username:password@host:port/dbname` when running this command.
+
+By default, the `db-init` command will attempt to create a database with the name provided in your `DATABASE_URL` environment variable. If you've already created the database and just need to apply create the appropriate tables etc., you can run `interval-server db-init --skip-create` to skip the database creation step.
+
 ## Contributing
 
 For our initial release, we're focused on making it easy to setup and run your own Interval Server instance. We'll make it easier to contribute (and document how you can) in the future, but for now we aren't actively soliciting new contributions.
