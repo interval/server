@@ -4,13 +4,20 @@ import { Command, Option } from 'commander'
 import dotenv from 'dotenv'
 import express from 'express'
 import http from 'http'
-import { SpawnOptionsWithoutStdio, spawn } from 'child_process'
+import {
+  SpawnOptionsWithoutStdio,
+  exec as execCallback,
+  spawn,
+} from 'child_process'
 import { WebSocketServer } from 'ws'
 
 import { logger } from './server/utils/logger'
 // import envVars from './env'
 import path from 'path'
 import { z } from 'zod'
+import { promisify } from 'util'
+
+const exec = promisify(execCallback)
 
 // __dirname
 // Dev: /Users/alex/dev/interval/server/dist/src
@@ -119,6 +126,19 @@ async function initDb(opts: { skipCreate?: boolean }) {
   }
 
   if (!opts.skipCreate) {
+    // if the database already exists, exit
+    try {
+      await exec(
+        `psql ${envVars.DATABASE_URL} -t -c "SELECT 1 FROM pg_database WHERE datname='${dbName}'"`
+      )
+      logger.error(
+        `The database "${dbName}" already exists. You can run \`interval-server db-init --skip-create\` to run the initialization script against the existing "${dbName}" database.`
+      )
+      process.exit(1)
+    } catch (e) {
+      // the command errored, the database doesn't exist
+    }
+
     await child(
       'psql',
       [
@@ -180,7 +200,6 @@ async function main() {
       )
     })
   } else if (cmd === 'db-init') {
-    // TODO: Implement db init command
     logger.info('Initializing a database...')
     initDb({ skipCreate: args.includes('--skip-create') }).catch(() => {
       logger.error(`Failed to initialize database.`)
