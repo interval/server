@@ -2171,10 +2171,10 @@
   resolved "https://registry.yarnpkg.com/@humanwhocodes/object-schema/-/object-schema-2.0.1.tgz#e5211452df060fa8522b55c7b3c0c4d1981cb044"
   integrity sha512-dvuCeX5fC9dXgJn9t+X5atfmgQAzUOWqS1254Gh0m6i8wKd10ebXkfNKiRK+1GWi/yTvvLDHpoxLr0xxxeslWw==
 
-"@interval/sdk@2.0.0-dev0":
-  version "2.0.0-dev0"
-  resolved "https://registry.yarnpkg.com/@interval/sdk/-/sdk-2.0.0-dev0.tgz#6715f39f7dffe04703849fa871905a3b07b227a4"
-  integrity sha512-1g7Fuo5bxaRlPMse858w1tlMZmtpUrmgrHdssNwrP4TIy7zEV/5CRwCAHZU2pM3XtDSAB6LJXNXx7NeNmm7hWg==
+"@interval/sdk@2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@interval/sdk/-/sdk-2.0.0.tgz#a277ad14bb5a9fe2a553167a0a8d2a832e2cfaef"
+  integrity sha512-EkgqPH0pcXLYBkOnyo1S5OGqpTBx4YY1gN+LJJUcumfTX2ZuWVRbSZ6H+DGDEp4OTxZLF3KYOwnIaDbphhA0tw==
   dependencies:
     "@brillout/import" "^0.2.2"
     cross-fetch "^3.1.5"
