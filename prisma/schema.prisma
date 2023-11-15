@@ -571,14 +571,6 @@ model ActionScheduleRun {
   transaction    Transaction?   @relation(fields: [transactionId], references: [id])
 }
 
-model LoggedIOCall {
-  id            String           @id @default(dbgenerated("nanoid()"))
-  methodName    String
-  transactionId String
-  environment   UsageEnvironment
-  createdAt     DateTime         @default(now())
-}
-
 model Notification {
   id                     String                 @id @default(dbgenerated("nanoid()"))
   createdAt              DateTime               @default(now())
