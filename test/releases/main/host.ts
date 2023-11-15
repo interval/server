@@ -13,12 +13,10 @@ import {
   mockColumns,
   denseColumns,
 } from '../../data/table'
-import { T_IO_PROPS } from '@interval/sdk/dist/ioSchema'
 import z from 'zod'
 import util from 'util'
 import * as db from '../../data/mockDb'
 import { EventualMetaItem } from '@interval/sdk/dist/components/displayMetadata'
-import { faker } from '@faker-js/faker'
 
 const writeFile = util.promisify(fs.writeFile)
 const removeFile = util.promisify(fs.unlink)
@@ -60,7 +58,7 @@ export { Interval }
 
 export default async function setupHost() {
   const interval = new Interval({
-    apiKey: process.env.GHOST_MODE ? undefined : config.apiKey,
+    apiKey: config.apiKey,
     logLevel: 'debug',
     endpoint: ENDPOINT_URL,
     routes: {
