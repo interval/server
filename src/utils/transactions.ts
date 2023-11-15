@@ -10,6 +10,7 @@ import {
   T_IO_METHOD_NAMES,
   T_IO_Schema,
 } from '@interval/sdk/dist/ioSchema'
+import { logger } from '~/utils/logger'
 // IMPORTANT: This file cannot be imported from the server
 // because of this import ⬇
 import type { IORenderInstruction, OnRespond } from '~/components/RenderIOCall'
@@ -51,10 +52,17 @@ export function unpackIOCall(
     }
 
     if (element.props && element.propsMeta) {
-      element.props = superjson.deserialize({
-        json: element.props,
-        meta: element.propsMeta,
-      })
+      try {
+        element.props = superjson.deserialize({
+          json: element.props,
+          meta: element.propsMeta,
+        })
+      } catch (error) {
+        logger.error('Error from SuperJSON deserialization', {
+          error,
+          meta: element.propsMeta,
+        })
+      }
     }
 
     const inputs = schemaForMethod.props.safeParse(element.props ?? {})

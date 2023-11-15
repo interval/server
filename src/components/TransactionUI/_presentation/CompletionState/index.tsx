@@ -13,6 +13,7 @@ import { useParams } from 'react-router-dom'
 import { extractOrgSlug } from '~/utils/extractOrgSlug'
 import IconRedirect from '~/icons/compiled/Redirect'
 import useTransactionAutoScroll from '~/utils/useTransactionAutoScroll'
+import { logger } from '~/utils/logger'
 
 export default function CompletionState({
   className,
@@ -33,10 +34,17 @@ export default function CompletionState({
   const { resultData, resultDataMeta } = transaction
   const result: JSONValue = useMemo(() => {
     if (resultDataMeta) {
-      return superjson.deserialize({
-        json: resultData,
-        meta: resultDataMeta,
-      } as SuperJSONResult)
+      try {
+        return superjson.deserialize({
+          json: resultData,
+          meta: resultDataMeta,
+        } as SuperJSONResult)
+      } catch (error) {
+        logger.error('Error from SuperJSON deserialization', {
+          error,
+          meta: resultDataMeta,
+        })
+      }
     }
 
     return resultData

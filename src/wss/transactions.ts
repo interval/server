@@ -61,6 +61,19 @@ export async function startTransaction(
     mode === 'live' ? host.organizationEnvironment?.slug ?? null : null
   const orgEnvSlug = getOrgEnvSlug(envSlug, host.organization.slug)
 
+  let deserializedParams = params
+  try {
+    deserializedParams = superjson.deserialize({
+      json: params as JSONValue,
+      meta: paramsMeta,
+    })
+  } catch (error) {
+    logger.error('Error from SuperJSON deserialization', {
+      error,
+      meta: paramsMeta,
+    })
+  }
+
   return host.rpc.send('START_TRANSACTION', {
     transactionId: transaction.id,
     displayResolvesImmediately: shouldUseAppendUi,
@@ -72,10 +85,7 @@ export async function startTransaction(
         mode,
         slug: transaction.action.slug,
         absolute: true,
-        params: superjson.deserialize({
-          json: params as JSONValue,
-          meta: paramsMeta,
-        }),
+        params: deserializedParams,
       }),
     },
     environment: getActionEnvironment(host),

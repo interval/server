@@ -16,6 +16,7 @@ import MobilePageSubnav from '../MobileSubnav'
 import { UnimplementedComponents } from '~/components/TransactionUI'
 import usePageMenuItems from '~/utils/usePageMenuItems'
 import { useIsFeatureEnabled } from '~/utils/useIsFeatureEnabled'
+import { logger } from '~/utils/logger'
 
 interface BasicLayoutProps extends LayoutProps {
   layout: BasicLayoutSchema
@@ -57,9 +58,17 @@ export default function BasicLayout({
     'TABLE_TRUNCATION_DISABLED'
   )
 
-  const pageMeta: MetaItemSchema[] | null = layout.metadata
-    ? superjson.deserialize(layout.metadata as SuperJSONResult)
-    : null
+  let pageMeta: MetaItemSchema[] | null = null
+  if (layout.metadata) {
+    try {
+      pageMeta = superjson.deserialize(layout.metadata as SuperJSONResult)
+    } catch (error) {
+      logger.error('Error from SuperJSON deserialization', {
+        error,
+        meta: layout.metadata.meta,
+      })
+    }
+  }
 
   // don't render a page that doesn't match the current URL.
   // prevents flickering when switching between pages
