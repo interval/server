@@ -26,7 +26,6 @@ import {
   TransactionStatus,
 } from '@prisma/client'
 import { completionMessage, completionTitle } from '~/utils/notify'
-import './inApp'
 
 // I don't think this is true anymore ⬇
 // Imports must be relative and not use aliases for server code

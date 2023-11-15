@@ -36,10 +36,6 @@ const schema = z.object({
   S3_KEY_SECRET: z.string().optional(),
   S3_BUCKET: z.string().optional(),
   S3_REGION: z.string().optional(),
-
-  // internal actions
-  INTERNAL_TOOLS_ENDPOINT: z.string().optional(),
-  INTERNAL_TOOLS_API_KEY: z.string().optional(),
 })
 
 const possiblyValid = schema.safeParse(process.env)
