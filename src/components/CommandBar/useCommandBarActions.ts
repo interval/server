@@ -60,32 +60,36 @@ export default function useCommandBarActions() {
 
   const searchOptions: SearchOption[] = useMemo(() => {
     const groups = data?.groups || []
-    const groupOptions: SearchOption[] = groups.map(group => ({
-      id: `group-${group.slug}`,
-      name: group.name,
-      slug: group.slug,
-      link: `${basePath}/${group.slug}`,
-      subtitle: group.description || undefined,
-      parent: getGroupSlug(group.slug)
-        ? `group-${getGroupSlug(group.slug)}`
-        : 'search-actions',
-    }))
+    const groupOptions: SearchOption[] = groups
+      .filter(group => group.status && group.status !== 'OFFLINE')
+      .map(group => ({
+        id: `group-${group.slug}`,
+        name: group.name,
+        slug: group.slug,
+        link: `${basePath}/${group.slug}`,
+        subtitle: group.description || undefined,
+        parent: getGroupSlug(group.slug)
+          ? `group-${getGroupSlug(group.slug)}`
+          : 'search-actions',
+      }))
     const actions = data?.actions ?? []
     return groupOptions.concat(
-      actions.map(action => {
-        const groupSlug = getGroupSlug(action.slug)
-        return {
-          id: action.id,
-          slug: action.slug,
-          parent:
-            groupSlug && groupOptions.find(g => g.slug === groupSlug)
-              ? `group-${getGroupSlug(action.slug)}`
-              : 'search-actions',
-          link: `${basePath}/${action.slug}`,
-          name: action.name || undefined,
-          subtitle: action.description || undefined,
-        }
-      })
+      actions
+        .filter(action => action.status && action.status !== 'OFFLINE')
+        .map(action => {
+          const groupSlug = getGroupSlug(action.slug)
+          return {
+            id: action.id,
+            slug: action.slug,
+            parent:
+              groupSlug && groupOptions.find(g => g.slug === groupSlug)
+                ? `group-${getGroupSlug(action.slug)}`
+                : 'search-actions',
+            link: `${basePath}/${action.slug}`,
+            name: action.name || undefined,
+            subtitle: action.description || undefined,
+          }
+        })
     )
   }, [data, basePath])
 
