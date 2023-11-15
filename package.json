@@ -46,7 +46,7 @@
     "express": "^4.18.2",
     "@aws-sdk/client-s3": "^3.109.0",
     "@aws-sdk/s3-request-presigner": "^3.109.0",
-    "@interval/sdk": "1.6.0-dev0",
+    "@interval/sdk": "2.0.0-dev0",
     "@prisma/client": "^5.3.0",
     "prisma": "^5.3.0",
     "@prisma/generator-helper": "^5.3.0",
@@ -195,7 +195,7 @@
     "vite": "^3.2.0",
     "vite-plugin-checker": "^0.5.1",
     "vite-tsconfig-paths": "^4.0.5",
-    "xlsx": "^0.19.3",
+    "xlsx": "^0.18.5",
     "react-router-dom": "6.3.x"
   },
   "resolutions": {

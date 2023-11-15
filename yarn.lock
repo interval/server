@@ -2171,10 +2171,10 @@
   resolved "https://registry.yarnpkg.com/@humanwhocodes/object-schema/-/object-schema-2.0.1.tgz#e5211452df060fa8522b55c7b3c0c4d1981cb044"
   integrity sha512-dvuCeX5fC9dXgJn9t+X5atfmgQAzUOWqS1254Gh0m6i8wKd10ebXkfNKiRK+1GWi/yTvvLDHpoxLr0xxxeslWw==
 
-"@interval/sdk@1.6.0-dev0":
-  version "1.6.0-dev0"
-  resolved "https://registry.yarnpkg.com/@interval/sdk/-/sdk-1.6.0-dev0.tgz#a21e91532c35e0d7e6e44c67c1aaa7481f6af443"
-  integrity sha512-KD/FR5YvxgiRHgMMgR9vYzkXbBPm+buLdQi1XlMy3PERj1LDjn6WtbfEQQKtw9mrZe27Asn4vAO9Wtf5N8qfPg==
+"@interval/sdk@2.0.0-dev0":
+  version "2.0.0-dev0"
+  resolved "https://registry.yarnpkg.com/@interval/sdk/-/sdk-2.0.0-dev0.tgz#6715f39f7dffe04703849fa871905a3b07b227a4"
+  integrity sha512-1g7Fuo5bxaRlPMse858w1tlMZmtpUrmgrHdssNwrP4TIy7zEV/5CRwCAHZU2pM3XtDSAB6LJXNXx7NeNmm7hWg==
   dependencies:
     "@brillout/import" "^0.2.2"
     cross-fetch "^3.1.5"
@@ -15496,7 +15496,7 @@ ws@^8.2.3, ws@^8.4.1:
   resolved "https://registry.yarnpkg.com/ws/-/ws-8.14.2.tgz#6c249a806eb2db7a20d26d51e7709eab7b2e6c7f"
   integrity sha512-wEBG1ftX4jcglPxgFCMJmZ2PLtSbJ2Peg6TmpJFTbe9GZYOQCDPdMYu/Tm0/bGZkw8paZnJY45J4K2PZrLYq8g==
 
-xlsx@^0.18.3:
+xlsx@^0.18.5:
   version "0.18.5"
   resolved "https://registry.yarnpkg.com/xlsx/-/xlsx-0.18.5.tgz#16711b9113c848076b8a177022799ad356eba7d0"
   integrity sha512-dmg3LCjBPHZnQp5/F/+nnTa+miPJxUXB6vtk42YjBBKayDNagxGEeIdWApkYPOf3Z3pm3k62Knjzp7lMeTEtFQ==
