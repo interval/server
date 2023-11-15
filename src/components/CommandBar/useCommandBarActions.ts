@@ -73,12 +73,6 @@ export default function useCommandBarActions() {
     const actions = data?.actions ?? []
     return groupOptions.concat(
       actions.map(action => {
-        let link: string | undefined = undefined
-        if (action.canRun && action.status === 'ONLINE') {
-          link = `${basePath}/${action.slug}`
-        } else if (action.canConfigure) {
-          link = `/dashboard/${orgEnvSlug}/configure/${action.slug}`
-        }
         const groupSlug = getGroupSlug(action.slug)
         return {
           id: action.id,
@@ -87,13 +81,13 @@ export default function useCommandBarActions() {
             groupSlug && groupOptions.find(g => g.slug === groupSlug)
               ? `group-${getGroupSlug(action.slug)}`
               : 'search-actions',
-          link,
+          link: `${basePath}/${action.slug}`,
           name: action.name || undefined,
           subtitle: action.description || undefined,
         }
       })
     )
-  }, [data, basePath, orgEnvSlug])
+  }, [data, basePath])
 
   const mostUsedActions = useMemo(() => {
     const mostUsedActions: SearchOption[] = []
