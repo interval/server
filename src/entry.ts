@@ -1,19 +1,14 @@
 #!/usr/bin/env node
 /* eslint-env node */
-import { Command } from 'commander'
-import dotenv from 'dotenv'
+import { Command, Option } from 'commander'
 import express from 'express'
 import http from 'http'
-import {
-  SpawnOptionsWithoutStdio,
-  spawn,
-} from 'child_process'
+import { SpawnOptionsWithoutStdio, spawn } from 'child_process'
 import { WebSocketServer } from 'ws'
 
 import { logger } from './server/utils/logger'
-// import envVars from './env'
+import env from './env'
 import path from 'path'
-import { z } from 'zod'
 import { PrismaClient } from '@prisma/client'
 
 // __dirname
@@ -77,35 +72,12 @@ const initSql = `
   $$ LANGUAGE PLPGSQL STABLE;
 `
 
-function loadDbUrlEnvVar() {
-  try {
-    dotenv.config()
-  } catch (err) {
-    console.error('Failed loading .env', err)
-  }
-
-  // only parse the the db URL so that this command can be run without other env vars being set.
-  try {
-    return z.object({ DATABASE_URL: z.string() }).parse(process.env)
-  } catch (e) {
-    return null
-  }
-}
-
 async function setupDb() {
-  const envVars = loadDbUrlEnvVar()
-  if (!envVars) {
-    logger.error(`No DATABASE_URL environment variable was set.`)
-    process.exit(1)
-  }
+  const prisma = new PrismaClient({ datasourceUrl: env.DATABASE_URL })
 
-  const prisma = new PrismaClient({ datasourceUrl: envVars.DATABASE_URL })
-
-  await Promise.all([
-    prisma.$executeRawUnsafe('CREATE EXTENSION IF NOT EXISTS pgcrypto;'),
-    prisma.$executeRawUnsafe(initSql),
-    child('npx', ['-y', 'prisma', 'db', 'push'], { cwd: projectRootDir }),
-  ])
+  await prisma.$executeRawUnsafe('CREATE EXTENSION IF NOT EXISTS pgcrypto;')
+  await prisma.$executeRawUnsafe(initSql)
+  await child('npx', ['-y', 'prisma', 'db', 'push'], { cwd: projectRootDir })
 }
 
 const program = new Command()
@@ -116,38 +88,62 @@ program
   .name('interval-server')
   .description('Interval Server is the central server for Interval apps')
   .option('-v, --verbose', 'verbose output')
-  .addCommand(new Command('start').description('starts Interval Server'))
+  .addCommand(
+    new Command('start')
+      .description('Starts Interval Server.')
+      .addOption(
+        new Option(
+          '--internal-actions',
+          'start interval internal actions along with the server'
+        )
+      )
+  )
+  .addCommand(
+    new Command('internal-actions').description('Starts the internal actions.')
+  )
 
-const [cmd] = program.parse().args
+const [cmd, ...args] = program.parse().args
 async function main() {
-  if (cmd === 'start') {
-    const envVars = (await import('./env')).default
+  switch (cmd) {
+    case 'start': {
+      await setupDb()
 
-    await setupDb()
+      // start the internal web socket server
+      import('./wss/index')
 
-    // start the internal web socket server
-    import('./wss/index')
+      const app = express()
 
-    const app = express()
+      const mainAppServer = (await import('./server/index')).default
 
-    const mainAppServer = (await import('./server/index')).default
+      app.use(mainAppServer)
 
-    app.use(mainAppServer)
+      const server = http.createServer(app)
 
-    const server = http.createServer(app)
+      const wss = new WebSocketServer({ server, path: '/websocket' })
+      const { setupWebSocketServer } = await import('./wss/wss')
+      setupWebSocketServer(wss)
 
-    const wss = new WebSocketServer({ server, path: '/websocket' })
-    const { setupWebSocketServer } = await import('./wss/wss')
-    setupWebSocketServer(wss)
+      server.listen(Number(env.PORT), () => {
+        logger.info(`📡 Interval Server listening at ${env.APP_URL}`)
+        logger.info(
+          `💡 Connect SDK using endpoint: wss://${
+            new URL(env.APP_URL).host
+          }/websocket`
+        )
 
-    server.listen(Number(envVars.PORT), () => {
-      logger.info(
-        `📡 Interval Server listening at ${envVars.APP_URL}`
-      )
-      logger.info(
-        `💡 Connect SDK using endpoint: wss://${new URL(envVars.APP_URL).host}/websocket`
-      )
-    })
+        if (args.includes('--internal-actions')) {
+          import('./interval').catch(err => {
+            logger.error('Failed starting internal actions:', err)
+          })
+        }
+      })
+
+      break
+    }
+    case 'internal-actions': {
+      await import('./interval')
+      break
+    }
   }
 }
 
