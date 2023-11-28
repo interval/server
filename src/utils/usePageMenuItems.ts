@@ -27,6 +27,7 @@ export default function usePageMenuItems(
       absolute = true
     } else if ('route' in menuItem) {
       href = getActionUrl({
+        base: window.location.origin,
         slug: menuItem.route,
         params: menuItem.params,
       })
@@ -36,6 +37,7 @@ export default function usePageMenuItems(
       }
     } else if ('action' in menuItem) {
       href = getActionUrl({
+        base: window.location.origin,
         slug: menuItem.action,
         params: menuItem.params,
       })

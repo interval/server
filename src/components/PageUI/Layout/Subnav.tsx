@@ -6,9 +6,7 @@ import { getActionUrl, getName } from '~/utils/actions'
 import { useOrgParams } from '~/utils/organization'
 import {
   ActionGroupLookupResult,
-  ActionGroupWithPossibleMetadata,
   ActionMode,
-  ActionWithPossibleMetadata,
   NamedActionLike,
 } from '~/utils/types'
 
@@ -26,6 +24,7 @@ function SubnavItem({
     <li key={item.id}>
       <NavLink
         to={getActionUrl({
+          base: window.location.origin,
           orgEnvSlug,
           mode,
           slug: item.slug,
@@ -66,6 +65,7 @@ export default function PageSubnav({
       <h3 className="text-base font-semibold text-gray-900 tracking-[-0.01em] mb-2">
         <Link
           to={getActionUrl({
+            base: window.location.origin,
             orgEnvSlug,
             mode,
             slug: secondaryNav.slug,

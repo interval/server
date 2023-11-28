@@ -147,7 +147,7 @@ export default function SignupPage() {
                 password: '',
                 organizationName: '',
                 invitationId,
-                timeZoneName: DateTime.now().zoneName,
+                timeZoneName: DateTime.now().zoneName ?? '',
                 onboardingExampleSlug: exampleSlug,
                 intendedPlanName,
               }}
@@ -216,7 +216,7 @@ export default function SignupPage() {
                 return {}
               }}
             >
-              {({ values, setFieldValue, errors, touched }) => {
+              {({ values, errors, touched }) => {
                 const googleParams = new URLSearchParams()
                 if (invitationId) googleParams.set('token', invitationId)
                 if (intendedPlanName) googleParams.set('plan', intendedPlanName)

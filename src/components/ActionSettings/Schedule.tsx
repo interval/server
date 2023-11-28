@@ -2,7 +2,7 @@ import { Formik, Form } from 'formik'
 import { useEffect, useMemo, useCallback } from 'react'
 import classNames from 'classnames'
 import { useFormikContext } from 'formik'
-import { Link, Navigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { DateTime } from 'luxon'
 import IconClose from '~/icons/compiled/Close'
 import IVButton from '~/components/IVButton'
@@ -30,7 +30,6 @@ import IconInfo from '~/icons/compiled/Info'
 import { displayName } from '~/utils/user'
 import { isBackgroundable } from '~/utils/actions'
 import { useOrgParams } from '~/utils/organization'
-import { useIsFeatureEnabled } from '~/utils/useIsFeatureEnabled'
 
 const times = [
   '12:00 AM',
@@ -248,7 +247,7 @@ function ActionSchedule({
                   <IVSelect
                     className="mt-2 md:mt-0 md:ml-2 md:w-[250px]"
                     options={TIMEZONE_OPTIONS}
-                    value={input.timeZoneName}
+                    value={input.timeZoneName ?? ''}
                     onChange={event => {
                       updateInput({ timeZoneName: event.target.value })
                     }}
@@ -364,7 +363,6 @@ export default function ActionScheduleSettings({
   onError: () => void
   refetch: () => void
 }) {
-  const { orgSlug } = useOrgParams()
   const updateMeta = trpc.useMutation('action.schedule.update')
 
   const actionScheduleInputs = useMemo(

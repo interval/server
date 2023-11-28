@@ -48,6 +48,7 @@ test.describe.parallel('Basic transactions tests', () => {
     ).toHaveAttribute(
       'href',
       getActionUrl({
+        base: process.env.APP_URL,
         orgEnvSlug: 'test-runner',
         slug: 'context',
         mode: 'console',
@@ -109,6 +110,7 @@ test.describe.parallel('Basic transactions tests', () => {
     await transactions.run('io.display.link')
 
     const actionUrl = getActionUrl({
+      base: process.env.APP_URL,
       orgEnvSlug: 'test-runner',
       slug: 'helloCurrentUser',
       mode: 'console',
@@ -1296,6 +1298,7 @@ test.describe.parallel('Basic transactions tests', () => {
     ).toHaveAttribute(
       'href',
       getActionUrl({
+        base: process.env.APP_URL,
         orgEnvSlug: 'test-runner',
         slug: 'links',
         mode: 'console',
@@ -1310,6 +1313,7 @@ test.describe.parallel('Basic transactions tests', () => {
     ).toHaveAttribute(
       'href',
       getActionUrl({
+        base: process.env.APP_URL,
         orgEnvSlug: 'test-runner',
         slug: 'links',
         mode: 'console',

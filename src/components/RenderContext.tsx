@@ -3,6 +3,7 @@ import { SerializableRecord } from '@interval/sdk/dist/ioSchema'
 
 export type RenderContextProps = {
   getActionUrl: (props: {
+    base: string
     slug: string
     params?: SerializableRecord
     absolute?: boolean

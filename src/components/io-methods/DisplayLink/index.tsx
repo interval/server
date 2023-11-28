@@ -5,6 +5,7 @@ import { RCTResponderProps } from '~/components/RenderIOCall'
 import { getCurrentPath } from '~/utils/url'
 
 export function useActionUrl(props: {
+  base: string
   url?: string
   href?: string
   route?: string
@@ -24,8 +25,8 @@ export function useActionUrl(props: {
   const slug = props.route ?? props.action ?? ''
 
   return getActionUrl({
-    slug,
     ...props,
+    slug,
   })
 }
 
@@ -44,7 +45,10 @@ export function getRouteOrAction(props: RCTResponderProps<'DISPLAY_LINK'>) {
 }
 
 export default function DisplayLink(props: RCTResponderProps<'DISPLAY_LINK'>) {
-  const actionUrl = useActionUrl(getRouteOrAction(props))
+  const actionUrl = useActionUrl({
+    base: window.location.origin,
+    ...getRouteOrAction(props),
+  })
 
   const url = 'url' in props ? props.url : 'href' in props ? props.href : null
 

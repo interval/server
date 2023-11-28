@@ -60,7 +60,7 @@ export default function ActionsListItem({
   const href = useMemo(
     () =>
       getActionUrl({
-        base: window.location.href,
+        base: window.location.origin,
         orgEnvSlug,
         mode: actionMode,
         slug: action.slug,
