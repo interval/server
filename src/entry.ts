@@ -177,34 +177,50 @@ program
 
 const [cmd, ...args] = program.parse().args
 async function main() {
-  if (cmd === 'start') {
-    const envVars = (await import('./env')).default
-    // start the internal web socket server
-    import('./wss/index')
+  switch (cmd) {
+    case 'start': {
+      const envVars = (await import('./env')).default
+      // start the internal web socket server
+      import('./wss/index')
 
-    const app = express()
+      const app = express()
 
-    const mainAppServer = (await import('./server/index')).default
+      const mainAppServer = (await import('./server/index')).default
 
-    app.use(mainAppServer)
+      app.use(mainAppServer)
 
-    const server = http.createServer(app)
+      const server = http.createServer(app)
 
-    const wss = new WebSocketServer({ server, path: '/websocket' })
-    const { setupWebSocketServer } = await import('./wss/wss')
-    setupWebSocketServer(wss)
+      const wss = new WebSocketServer({ server, path: '/websocket' })
+      const { setupWebSocketServer } = await import('./wss/wss')
+      setupWebSocketServer(wss)
 
-    server.listen(Number(envVars.PORT), () => {
-      logger.info(
-        `📡 Interval Server listening at http://localhost:${envVars.PORT}`
-      )
-    })
-  } else if (cmd === 'db-init') {
-    logger.info('Initializing a database...')
-    initDb({ skipCreate: args.includes('--skip-create') }).catch(() => {
-      logger.error(`Failed to initialize database.`)
-      process.exit(1)
-    })
+      server.listen(Number(envVars.PORT), () => {
+        logger.info(
+          `📡 Interval Server listening at http://localhost:${envVars.PORT}`
+        )
+
+        if (args.includes('--internal-actions')) {
+          import('./interval').catch(err => {
+            logger.error('Failed starting internal actions:', err)
+          })
+        }
+      })
+
+      break
+    }
+    case 'internal': {
+      await import('./interval')
+      break
+    }
+    case 'db-init': {
+      logger.info('Initializing a database...')
+      initDb({ skipCreate: args.includes('--skip-create') }).catch(() => {
+        logger.error('Failed to initialize database.')
+        process.exit(1)
+      })
+      break
+    }
   }
 }
 
