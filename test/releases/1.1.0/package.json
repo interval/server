@@ -1,9 +1,0 @@
-{
-  "name": "1.1.0",
-  "version": "1.1.0",
-  "main": "host.js",
-  "private": true,
-  "dependencies": {
-    "@interval/sdk": "npm:@interval/sdk@1.1.x"
-  }
-}
