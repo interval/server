@@ -21,6 +21,7 @@
     "migrate:prod": "prisma migrate deploy",
     "build": "rm -rf dist && prisma generate && yarn server:build && yarn wss:build && yarn client:build",
     "pkg": "./scripts/pkg.sh",
+    "pub": "./scripts/pub.sh",
     "start": "NODE_ENV=production ./dist/src/entry.js",
     "docker": "./scripts/docker-build.sh",
     "client:build": "vite build",
