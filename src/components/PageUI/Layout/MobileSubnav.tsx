@@ -34,6 +34,7 @@ export default function MobilePageSubnav({
           <option
             key={action.id}
             value={getActionUrl({
+              base: window.location.origin,
               orgEnvSlug,
               mode,
               slug: action.slug,
@@ -49,6 +50,7 @@ export default function MobilePageSubnav({
                 <option
                   key={group.id}
                   value={getActionUrl({
+                    base: window.location.origin,
                     orgEnvSlug,
                     mode,
                     slug: group.slug,
@@ -61,6 +63,7 @@ export default function MobilePageSubnav({
                     <option
                       key={action.id}
                       value={getActionUrl({
+                        base: window.location.origin,
                         orgEnvSlug,
                         mode,
                         slug: action.slug,

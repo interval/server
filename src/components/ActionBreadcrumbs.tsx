@@ -47,6 +47,7 @@ export default function ActionsBreadcrumbs({
             ) : (
               <Link
                 to={getActionUrl({
+                  base: window.location.origin,
                   orgEnvSlug,
                   mode,
                   slug: breadcrumb.slug,

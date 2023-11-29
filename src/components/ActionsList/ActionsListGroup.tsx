@@ -24,7 +24,12 @@ export default function ActionsListGroup(props: ActionsListGroupProps) {
   const href = useMemo(() => {
     if (!groupSlug) return
 
-    return getActionUrl({ orgEnvSlug, mode, slug: groupSlug })
+    return getActionUrl({
+      base: window.location.origin,
+      orgEnvSlug,
+      mode,
+      slug: groupSlug,
+    })
   }, [groupSlug, orgEnvSlug, mode])
 
   return (
@@ -45,6 +50,7 @@ export default function ActionsListGroup(props: ActionsListGroupProps) {
       >
         {props.groups?.map(group => {
           const url = getActionUrl({
+            base: window.location.origin,
             orgEnvSlug,
             mode,
             slug: group.slug,

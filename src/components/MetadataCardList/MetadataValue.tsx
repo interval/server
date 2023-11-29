@@ -25,6 +25,7 @@ export default function MetadataValue({ item }: MetadataValueProps) {
 
     if (slug && typeof slug === 'string') {
       cell.url = getActionUrl({
+        base: window.location.origin,
         slug,
         params: cell.params,
       })

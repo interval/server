@@ -21,6 +21,7 @@ import {
   ConnectedHost,
 } from './processVars'
 import { logger } from '~/server/utils/logger'
+import env from '~/env'
 
 export async function startTransaction(
   transaction: TransactionWithAction,
@@ -81,6 +82,7 @@ export async function startTransaction(
     action: {
       slug: transaction.action.slug,
       url: getActionUrl({
+        base: env.APP_URL,
         orgEnvSlug,
         mode,
         slug: transaction.action.slug,

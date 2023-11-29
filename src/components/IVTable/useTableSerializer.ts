@@ -98,7 +98,11 @@ export default function useTableSerializer(props: {
 
             return {
               ...rest,
-              path: getActionUrl({ slug: action, params }),
+              path: getActionUrl({
+                base: window.location.origin,
+                slug: action,
+                params,
+              }),
             }
           }
 
@@ -107,7 +111,11 @@ export default function useTableSerializer(props: {
 
             return {
               ...rest,
-              path: getActionUrl({ slug: String(route), params }),
+              path: getActionUrl({
+                base: window.location.origin,
+                slug: String(route),
+                params,
+              }),
             }
           }
 

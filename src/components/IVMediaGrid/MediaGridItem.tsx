@@ -155,7 +155,11 @@ function Menu(props: GridItemProps) {
 
     return {
       ...item,
-      path: getActionUrl({ slug: item.route, params: item.params }),
+      path: getActionUrl({
+        base: window.location.origin,
+        slug: item.route,
+        params: item.params,
+      }),
     }
   })
 
@@ -182,6 +186,7 @@ const MediaGridItem = React.forwardRef(
     const { getActionUrl } = useRenderContext()
     const actionUrl = props.route
       ? getActionUrl({
+          base: window.location.origin,
           slug: props.route,
           params: props.params,
         })

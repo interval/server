@@ -399,14 +399,14 @@ export function getDashboardPath({
 }
 
 export function getActionUrl({
-  base = process.env.APP_URL,
+  base,
   orgEnvSlug,
   mode,
   absolute = false,
   slug,
   params,
 }: {
-  base?: string
+  base: string
   orgEnvSlug: string
   mode: ActionMode | 'anon-console'
   slug: string

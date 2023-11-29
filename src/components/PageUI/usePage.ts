@@ -101,6 +101,7 @@ export default function usePage({
           window.location.assign(props.url)
         } else if (orgEnvSlug) {
           const url = getActionUrl({
+            base: window.location.origin,
             orgEnvSlug,
             mode,
             slug: props.route,
