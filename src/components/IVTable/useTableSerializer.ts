@@ -67,6 +67,7 @@ export default function useTableSerializer(props: {
           if (!cellObj.url && slug && typeof slug === 'string') {
             cellObj.url = getActionUrl({
               ...cell,
+              base: window.location.origin,
               slug,
             })
             cellObj.isInternalActionUrl = true
