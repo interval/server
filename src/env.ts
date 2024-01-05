@@ -21,6 +21,7 @@ const schema = z.object({
 
   // emails
   POSTMARK_API_KEY: z.string().optional(),
+  EMAIL_FROM: z.string().optional().default('Interval <help@interval.com>'),
 
   // authentication
   WORKOS_API_KEY: z.string().optional(),
