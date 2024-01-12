@@ -1,4 +1,4 @@
-import * as cron from 'node-cron'
+import { Cron } from 'croner'
 import { ActionSchedule, Prisma } from '@prisma/client'
 import {
   CronSchedule,
@@ -24,17 +24,21 @@ import { TransactionRunner } from '~/utils/user'
  * to be refactored in order to support multiple app servers.
  */
 
-const tasks = new Map<string, cron.ScheduledTask>()
+const tasks = new Map<string, Cron>()
 
 export function isInputValid(input: ScheduleInput): boolean {
   const schedule = toCronSchedule(input)
   if (!schedule) return false
-
-  return cron.validate(cronScheduleToString(schedule))
+  return isValid(schedule)
 }
 
 export function isValid(schedule: CronSchedule): boolean {
-  return cron.validate(cronScheduleToString(schedule))
+  try {
+    Cron(cronScheduleToString(schedule), { maxRuns: 0 })
+    return true
+  } catch {
+    return false
+  }
 }
 
 export async function syncActionSchedules(
@@ -210,8 +214,11 @@ export function schedule(
     return
   }
 
-  const task = cron.schedule(
+  const task = Cron(
     cronScheduleToString(actionSchedule),
+    {
+      timezone: actionSchedule.timeZoneName,
+    },
     async () => {
       try {
         const action = await prisma.action.findUnique({
@@ -441,9 +448,6 @@ export function schedule(
         })
       }
     },
-    {
-      timezone: actionSchedule.timeZoneName,
-    }
   )
 
   tasks.set(actionSchedule.id, task)
