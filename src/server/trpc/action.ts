@@ -587,12 +587,13 @@ export const actionRouter = createRouter()
         actionScheduleInputs: z.array(
           z.object({
             id: z.string().optional(), // Used on frontend only, here for types
-            schedulePeriod: z.enum(['hour', 'day', 'week', 'month']),
+            schedulePeriod: z.enum(['now', 'once', 'hour', 'day', 'week', 'month']),
             timeZoneName: z.enum(ALL_TIMEZONES).optional(),
             hours: z.number().int().optional(),
             minutes: z.number().int().optional(),
             dayOfWeek: z.number().int().optional(),
             dayOfMonth: z.number().int().optional(),
+            date: z.string().nullish(),
             notifyOnSuccess: z.boolean().optional(),
             runnerId: z.string().nullish(),
           })
