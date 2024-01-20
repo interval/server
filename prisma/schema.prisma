@@ -536,6 +536,7 @@ model ActionSchedule {
   id       String  @id @default(dbgenerated("nanoid()"))
   actionId String
   runnerId String?
+  once     Boolean @default(false)
 
   second       String
   minute       String
@@ -543,6 +544,7 @@ model ActionSchedule {
   dayOfMonth   String
   month        String
   dayOfWeek    String
+  date         String?
   timeZoneName String
 
   notifyOnSuccess Boolean @default(false)
