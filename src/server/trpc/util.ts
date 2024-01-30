@@ -78,11 +78,11 @@ export async function createContext(
     }
 
     if (
-      req.headers.__interval_organization_id &&
+      req.headers['x-interval-organization-id'] &&
       // For some reason undefined headers are being stringified instead of discarded during serialization
-      req.headers.__interval_organization_id !== 'undefined'
+      req.headers['x-interval-organization-id'] !== 'undefined'
     ) {
-      organizationId = String(req.headers.__interval_organization_id)
+      organizationId = String(req.headers['x-interval-organization-id'])
 
       req.session.currentOrganizationId = organizationId
       sessionUpdated = true
@@ -116,11 +116,11 @@ export async function createContext(
     }
 
     if (
-      req.headers.__interval_organization_environment_id &&
-      req.headers.__interval_organization_environment_id !== 'undefined'
+      req.headers['x-interval-organization-environment-id'] &&
+      req.headers['x-interval-organization-environment-id'] !== 'undefined'
     ) {
       organizationEnvironmentId =
-        req.headers.__interval_organization_environment_id?.toString()
+        req.headers['x-interval-organization-environment-id']?.toString()
       req.session.currentOrganizaitonEnvironmentId = organizationEnvironmentId
       sessionUpdated = true
     } else {
