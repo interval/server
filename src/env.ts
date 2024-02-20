@@ -16,6 +16,9 @@ const schema = z.object({
   WSS_API_SECRET: z.string(),
   AUTH_COOKIE_SECRET: z.string(),
 
+  // for internal interval host
+  INTERVAL_KEY: z.string().optional(),
+
   GIT_COMMIT: z.string().optional(),
   PORT: z.string().optional().default('3000'),
 
