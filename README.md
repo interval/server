@@ -25,6 +25,33 @@ Interval Server is a pure Node.js application. Node.js version 16 or higher is r
 - [Slack](https://slack.com) can be used to send notifications via Interval's [notify](https://interval.com/docs/action-context/notify) methods. If `SLACK_CLIENT_ID` and `SLACK_CLIENT_SECRET` environment variables are not provided when running Interval Server, notifications cannot be sent via Slack.
 - [S3](https://aws.amazon.com/s3/) can be used to support file uploads via Interval's [file input](https://interval.com/docs/io-methods/input-file) methods. If `S3_KEY_ID`,`S3_KEY_SECRET`,`S3_BUCKET`, and `S3_REGION` environment variables are not provided when running Interval Server, file uploads will not function properly.
 
+### S3 bucket configuration 
+
+To support file uploads, you will need to configure your S3 bucket for [Cross-origin Resource Sharing](https://docs.aws.amazon.com/AmazonS3/latest/userguide/enabling-cors-examples.html).   Here's an example policy:
+```
+[
+    {
+        "AllowedHeaders": [
+            "*"
+        ],
+        "AllowedMethods": [
+            "PUT",
+            "POST",
+            "DELETE"
+        ],
+        "AllowedOrigins": [
+            "https://your-interval-server.com"
+        ],
+        "ExposeHeaders": [
+            "x-amz-server-side-encryption",
+            "x-amz-request-id",
+            "x-amz-id-2"
+        ],
+        "MaxAgeSeconds": 3000
+    }
+]
+``` 
+
 ## Required environment variables
 
 - `APP_URL` is the URL where your Interval Server instance is running. For example: `http://localhost:3000` or `https://example.com`.
