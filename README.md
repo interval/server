@@ -20,7 +20,7 @@ Interval Server is a pure Node.js application. Node.js version 16 or higher is r
 
 ### Optional dependencies
 
-- [Postmark](https://postmarkapp.com) is used for sending application emails. In the future we may introduce a vendor-agnostic path for sending emails. If a `POSTMARK_API_KEY` environment variable is not provided when running Interval server, emails will not be sent.
+- [Postmark](https://postmarkapp.com) is used for sending application emails. In the future we may introduce a vendor-agnostic path for sending emails. If a `POSTMARK_API_KEY` environment variable is not provided when running Interval server, emails will not be sent. Use the `EMAIL_FROM` environment variable to customize the email `from` field. The default value is `Interval <help@interval.com>`.
 - [WorkOS](https://workos.com) is used for SSO, directory sync, and Sign in with Google. If `WORKOS_API_KEY`,`WORKOS_CLIENT_ID`, and `WORKOS_WEBHOOK_SECRET` environment variables are not provided when running Interval Server, these functions will not be available.
 - [Slack](https://slack.com) can be used to send notifications via Interval's [notify](https://interval.com/docs/action-context/notify) methods. If `SLACK_CLIENT_ID` and `SLACK_CLIENT_SECRET` environment variables are not provided when running Interval Server, notifications cannot be sent via Slack.
 - [S3](https://aws.amazon.com/s3/) can be used to support file uploads via Interval's [file input](https://interval.com/docs/io-methods/input-file) methods. If `S3_KEY_ID`,`S3_KEY_SECRET`,`S3_BUCKET`, and `S3_REGION` environment variables are not provided when running Interval Server, file uploads will not function properly.
