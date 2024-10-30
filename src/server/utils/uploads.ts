@@ -43,7 +43,7 @@ function getS3Client() {
       accessKeyId: env.S3_KEY_ID,
       secretAccessKey: env.S3_KEY_SECRET,
     },
-
+    forcePathStyle: true,
     endpoint: env.S3_PRIVATE_ENDPOINT,
   })
 }
