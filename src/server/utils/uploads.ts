@@ -20,7 +20,8 @@ function isS3Available(env: any): env is {
     typeof env.S3_KEY_ID === 'string' &&
     typeof env.S3_KEY_SECRET === 'string' &&
     typeof env.S3_REGION === 'string' &&
-    typeof env.S3_BUCKET === 'string'
+    typeof env.S3_BUCKET === 'string' &&
+    typeof env.S3_ENDPOINT === 'string'
   )
 }
 
@@ -39,6 +40,7 @@ function getS3Client() {
       accessKeyId: env.S3_KEY_ID,
       secretAccessKey: env.S3_KEY_SECRET,
     },
+    endpoint: env.S3_ENDPOINT,
   })
 }
 
