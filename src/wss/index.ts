@@ -231,4 +231,10 @@ app.post('/api/action-schedules/sync', async (req: Request, res: Response) => {
   }
 })
 
+app.post('/api/health', async (req: Request, res: Response) => {
+  return res.json({
+    status: 'ok',
+  })
+})
+
 app.listen(port)

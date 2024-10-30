@@ -2,6 +2,7 @@ import { Router } from 'express'
 import { WebSocket } from 'ws'
 import prisma from './prisma'
 import env from '~/env'
+import { makeApiCall } from './utils/wss'
 
 const router = Router()
 
@@ -15,10 +16,30 @@ router.get('/rev', function (req, res) {
   res.send(env.GIT_COMMIT)
 })
 
-router.get('/db', async function (req, res) {
-  const userCount = await prisma.user.count()
-  res.set('Cache-Control', 'no-store')
-  res.send(userCount > 0 ? 'OK' : 'KO')
+router.get('/', async function (req, res) {
+  const [userQuery, wssQuery] = await Promise.all([
+    prisma.user.count({ take: 1 }).catch(() => null),
+    makeApiCall('/api/health', '').catch(() => null),
+  ])
+
+  return res.json({
+    status: 'ok',
+    info: {
+      db: {
+        status: userQuery === null ? 'down' : 'up',
+      },
+      app: {
+        status: 'up',
+      },
+      internalWss: {
+        status: wssQuery === null ? 'down' : 'up',
+      }
+    },
+    error: {
+      db: userQuery === null ? 'user count query failed' : null,
+      internalWss: wssQuery === null ? 'internal wss query failed' : null,
+    },
+  })
 })
 
 router.get('/wss', function (req, res) {
