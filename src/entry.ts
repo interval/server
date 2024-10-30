@@ -145,7 +145,7 @@ async function main() {
         `📡 Interval Server listening at ${envVars.APP_URL}`
       )
       logger.info(
-        `💡 Access the Interval Server through the SDK with wss://${new URL(envVars.APP_URL).origin}/websocket`
+        `💡 Access the Interval Server through the SDK with wss://${new URL(envVars.APP_URL).host}/websocket`
       )
     })
   }
