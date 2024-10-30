@@ -64,6 +64,7 @@ export async function getIOPresignedUploadUrl(key: string): Promise<string> {
   if (env.S3_PUBLIC_ENDPOINT) {
     const publicEndpoint = new URL(env.S3_PUBLIC_ENDPOINT)
     publicEndpoint.pathname = url.pathname
+    publicEndpoint.search = url.search
     url = publicEndpoint
   }
 
