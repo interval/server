@@ -15,13 +15,16 @@ function isS3Available(env: any): env is {
   S3_KEY_SECRET: string
   S3_REGION: string
   S3_BUCKET: string
+  S3_PRIVATE_ENDPOINT: string
+  S3_PUBLIC_ENDPOINT: string
 } {
   return (
     typeof env.S3_KEY_ID === 'string' &&
     typeof env.S3_KEY_SECRET === 'string' &&
     typeof env.S3_REGION === 'string' &&
     typeof env.S3_BUCKET === 'string' &&
-    typeof env.S3_ENDPOINT === 'string'
+    typeof env.S3_PRIVATE_ENDPOINT === 'string' &&
+    typeof env.S3_PUBLIC_ENDPOINT === 'string'
   )
 }
 
@@ -40,7 +43,8 @@ function getS3Client() {
       accessKeyId: env.S3_KEY_ID,
       secretAccessKey: env.S3_KEY_SECRET,
     },
-    endpoint: env.S3_ENDPOINT,
+
+    endpoint: env.S3_PRIVATE_ENDPOINT,
   })
 }
 
@@ -56,7 +60,7 @@ export async function getIOPresignedUploadUrl(key: string): Promise<string> {
     expiresIn: 3600, // 1 hour
   })
 
-  return signedUrl
+  return new URL(signedUrl, env.S3_PUBLIC_ENDPOINT).toString()
 }
 
 export async function getIOPresignedDownloadUrl(key: string): Promise<string> {
