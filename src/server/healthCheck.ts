@@ -22,17 +22,21 @@ router.get('/', async function (req, res) {
     makeApiCall('/api/health', '').catch(() => null),
   ])
 
-  return res.json({
-    status: 'ok',
+  const dbStatus = userQuery === null ? 'down' : 'up'
+  const internalWssStatus = wssQuery === null ? 'down' : 'up'
+  const appStatus = dbStatus !== 'up' || internalWssStatus !== 'up' ? 'down' : 'up'
+
+  return res.status(appStatus === 'up' ? 200 : 503).json({
+    status: appStatus === 'up' ? 'ok' : 'error',
     info: {
       db: {
-        status: userQuery === null ? 'down' : 'up',
+        status: dbStatus,
       },
       app: {
-        status: 'up',
+        status: appStatus,
       },
       internalWss: {
-        status: wssQuery === null ? 'down' : 'up',
+        status: internalWssStatus,
       },
     },
     error: {
