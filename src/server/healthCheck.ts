@@ -33,9 +33,10 @@ router.get('/', async function (req, res) {
       },
       internalWss: {
         status: wssQuery === null ? 'down' : 'up',
-      }
+      },
     },
     error: {
+      app: null,
       db: userQuery === null ? 'user count query failed' : null,
       internalWss: wssQuery === null ? 'internal wss query failed' : null,
     },
