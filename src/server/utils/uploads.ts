@@ -60,10 +60,11 @@ export async function getIOPresignedUploadUrl(key: string): Promise<string> {
     expiresIn: 3600, // 1 hour
   })
 
-  const url = new URL(signedUrl)
+  let url = new URL(signedUrl)
   if (env.S3_PUBLIC_ENDPOINT) {
-    url.hostname = env.S3_PUBLIC_ENDPOINT.split(':')[0]
-    url.port = env.S3_PUBLIC_ENDPOINT.split(':')[1]
+    const publicEndpoint = new URL(env.S3_PUBLIC_ENDPOINT)
+    publicEndpoint.pathname = url.pathname
+    url = publicEndpoint
   }
 
   return url.toString()
