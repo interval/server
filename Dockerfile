@@ -1,4 +1,20 @@
-FROM node:18-alpine
-RUN npm i --save-prod -g @interval/server
-EXPOSE 3000
-CMD [ "interval-server", "start"]
+FROM node:18.18.0-alpine AS builder
+
+WORKDIR /app
+
+COPY package.json yarn.lock ./
+
+RUN yarn install --frozen-lockfile
+
+COPY . .
+
+RUN yarn build
+
+FROM node:18.18.0-alpine AS runner
+
+WORKDIR /app
+
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/node_modules ./node_modules
+
+CMD [ "node", "dist/src/entry.js", "start" ]
