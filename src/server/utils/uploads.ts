@@ -60,7 +60,13 @@ export async function getIOPresignedUploadUrl(key: string): Promise<string> {
     expiresIn: 3600, // 1 hour
   })
 
-  return new URL(signedUrl, env.S3_PUBLIC_ENDPOINT).toString()
+  const url = new URL(signedUrl)
+  if (env.S3_PUBLIC_ENDPOINT) {
+    url.hostname = env.S3_PUBLIC_ENDPOINT.split(':')[0]
+    url.port = env.S3_PUBLIC_ENDPOINT.split(':')[1]
+  }
+
+  return url.toString()
 }
 
 export async function getIOPresignedDownloadUrl(key: string): Promise<string> {
