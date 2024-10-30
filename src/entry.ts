@@ -126,7 +126,7 @@ async function main() {
     await setupDb()
 
     // start the internal web socket server
-    // import('./wss/index')
+    import('./wss/index')
 
     const app = express()
 
