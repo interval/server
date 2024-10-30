@@ -1,12 +1,11 @@
 #!/usr/bin/env node
 /* eslint-env node */
-import { Command, Option } from 'commander'
+import { Command } from 'commander'
 import dotenv from 'dotenv'
 import express from 'express'
 import http from 'http'
 import {
   SpawnOptionsWithoutStdio,
-  exec as execCallback,
   spawn,
 } from 'child_process'
 import { WebSocketServer } from 'ws'
@@ -15,9 +14,7 @@ import { logger } from './server/utils/logger'
 // import envVars from './env'
 import path from 'path'
 import { z } from 'zod'
-import { promisify } from 'util'
-
-const exec = promisify(execCallback)
+import { PrismaClient } from '@prisma/client'
 
 // __dirname
 // Dev: /Users/alex/dev/interval/server/dist/src
@@ -58,18 +55,7 @@ function child(
   })
 }
 
-async function checkHasPsqlInstalled() {
-  try {
-    await child('which', ['psql'], { silent: true })
-    return true
-  } catch (e) {
-    return false
-  }
-}
-
 const initSql = `
-  CREATE EXTENSION IF NOT EXISTS pgcrypto;
-
   CREATE OR REPLACE FUNCTION nanoid(size int DEFAULT 21)
   RETURNS text AS $$
   DECLARE
@@ -106,55 +92,20 @@ function loadDbUrlEnvVar() {
   }
 }
 
-async function initDb(opts: { skipCreate?: boolean }) {
+async function setupDb() {
   const envVars = loadDbUrlEnvVar()
   if (!envVars) {
     logger.error(`No DATABASE_URL environment variable was set.`)
     process.exit(1)
   }
-  const u = new URL(envVars.DATABASE_URL)
 
-  const dbName = u.pathname.replace('/', '')
-  logger.info(`Will create database ${dbName} on host ${u.hostname}...`)
+  const prisma = new PrismaClient({ datasourceUrl: envVars.DATABASE_URL })
 
-  const isPsqlInstalled = await checkHasPsqlInstalled()
-  if (!isPsqlInstalled) {
-    logger.error(
-      'Cannot initialize a database without psql installed. Please install psql and try again.'
-    )
-    process.exit(1)
-  }
-
-  if (!opts.skipCreate) {
-    // if the database already exists, exit
-    try {
-      await exec(
-        `psql ${envVars.DATABASE_URL} -t -c "SELECT 1 FROM pg_database WHERE datname='${dbName}'"`
-      )
-      logger.error(
-        `The database "${dbName}" already exists. You can run \`interval-server db-init --skip-create\` to run the initialization script against the existing "${dbName}" database.`
-      )
-      process.exit(1)
-    } catch (e) {
-      // the command errored, the database doesn't exist
-    }
-
-    await child(
-      'psql',
-      [
-        ['-h', u.hostname],
-        ['-p', u.port],
-        ['-U', u.username],
-        '-c',
-        `CREATE database "${dbName}";`,
-      ].flat(),
-      { env: { PGPASSWORD: u.password, ...process.env } }
-    )
-  }
-
-  await child('psql', [envVars.DATABASE_URL, '-c', initSql])
-
-  await child('npx', ['-y', 'prisma', 'db', 'push'], { cwd: projectRootDir })
+  await Promise.all([
+    prisma.$executeRawUnsafe('CREATE EXTENSION IF NOT EXISTS pgcrypto;'),
+    prisma.$executeRawUnsafe(initSql),
+    child('npx', ['-y', 'prisma', 'db', 'push'], { cwd: projectRootDir }),
+  ])
 }
 
 const program = new Command()
@@ -166,19 +117,14 @@ program
   .description('Interval Server is the central server for Interval apps')
   .option('-v, --verbose', 'verbose output')
   .addCommand(new Command('start').description('starts Interval Server'))
-  .addCommand(
-    new Command('db-init').addOption(
-      new Option(
-        '--skip-create',
-        'for when a database already exists, skip creating one'
-      )
-    )
-  )
 
-const [cmd, ...args] = program.parse().args
+const [cmd] = program.parse().args
 async function main() {
   if (cmd === 'start') {
     const envVars = (await import('./env')).default
+
+    await setupDb()
+
     // start the internal web socket server
     import('./wss/index')
 
@@ -198,12 +144,6 @@ async function main() {
       logger.info(
         `📡 Interval Server listening at http://localhost:${envVars.PORT}`
       )
-    })
-  } else if (cmd === 'db-init') {
-    logger.info('Initializing a database...')
-    initDb({ skipCreate: args.includes('--skip-create') }).catch(() => {
-      logger.error(`Failed to initialize database.`)
-      process.exit(1)
     })
   }
 }
