@@ -126,7 +126,7 @@ async function main() {
     await setupDb()
 
     // start the internal web socket server
-    import('./wss/index')
+    // import('./wss/index')
 
     const app = express()
 
@@ -142,7 +142,7 @@ async function main() {
 
     server.listen(Number(envVars.PORT), () => {
       logger.info(
-        `📡 Interval Server listening at http://localhost:${envVars.PORT}`
+        `📡 Interval Server listening at ${envVars.APP_URL}`
       )
     })
   }
