@@ -1,4 +1,5 @@
 # Interval Server
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/template/tFqAVW?referralCode=chIZYq)
 
 Interval Server is the central node used to run applications developed with the [Interval SDK](https://github.com/interval/interval-node).
 
