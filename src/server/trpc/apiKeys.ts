@@ -10,6 +10,8 @@ import { encryptPassword, generateKey } from '~/server/auth'
 import { hasPermission } from '~/utils/permissions'
 import { getDevKey } from '~/server/utils/apiKey'
 import { DEVELOPMENT_ORG_ENV_SLUG } from '~/utils/environments'
+import env from '~/env'
+import { isEmailEnabled } from '../utils/email'
 
 export const keyRouter = createRouter()
   .middleware(authenticatedMiddleware)
@@ -70,7 +72,7 @@ export const keyRouter = createRouter()
         throw new TRPCError({ code: 'FORBIDDEN' })
       }
 
-      if (usageEnvironment === 'PRODUCTION') {
+      if (isEmailEnabled()) {
         const pendingConfirmation =
           await prisma.userEmailConfirmToken.findFirst({
             where: { userId: user.id, email: null },
