@@ -10,6 +10,7 @@ import { generatePassword, requestEmailConfirmation } from '~/server/auth'
 import { createUser } from '~/server/user'
 import { hasPermission } from '~/utils/permissions'
 import { logger } from '~/server/utils/logger'
+import { isEmailEnabled } from '../utils/email'
 
 export const userRouter = createRouter()
   .middleware(authenticatedMiddleware)
@@ -94,7 +95,7 @@ export const userRouter = createRouter()
       return user
         ? {
             ...user,
-            isEmailConfirmationRequired: !!pendingConfirmation,
+            isEmailConfirmationRequired: !!pendingConfirmation && isEmailEnabled(),
           }
         : null
     },

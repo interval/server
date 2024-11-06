@@ -231,9 +231,10 @@ app.post('/api/action-schedules/sync', async (req: Request, res: Response) => {
   }
 })
 
-app.listen(port, () => {
-  const url = new URL(env.APP_URL)
-  url.port = port.toString()
-
-  logger.info(`📡 Internal WSS API Server listening at ${url.toString()}`)
+app.post('/api/health', async (req: Request, res: Response) => {
+  return res.json({
+    status: 'ok',
+  })
 })
+
+app.listen(port)

@@ -37,6 +37,7 @@ const schema = z.object({
   S3_KEY_SECRET: z.string().optional(),
   S3_BUCKET: z.string().optional(),
   S3_REGION: z.string().optional(),
+  S3_ENDPOINT: z.string().optional(),
 })
 
 const possiblyValid = schema.safeParse(process.env)

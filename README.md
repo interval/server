@@ -23,11 +23,12 @@ Interval Server is a pure Node.js application. Node.js version 16 or higher is r
 - [Postmark](https://postmarkapp.com) is used for sending application emails. In the future we may introduce a vendor-agnostic path for sending emails. If a `POSTMARK_API_KEY` environment variable is not provided when running Interval server, emails will not be sent. Use the `EMAIL_FROM` environment variable to customize the email `from` field. The default value is `Interval <help@interval.com>`.
 - [WorkOS](https://workos.com) is used for SSO, directory sync, and Sign in with Google. If `WORKOS_API_KEY`,`WORKOS_CLIENT_ID`, and `WORKOS_WEBHOOK_SECRET` environment variables are not provided when running Interval Server, these functions will not be available.
 - [Slack](https://slack.com) can be used to send notifications via Interval's [notify](https://interval.com/docs/action-context/notify) methods. If `SLACK_CLIENT_ID` and `SLACK_CLIENT_SECRET` environment variables are not provided when running Interval Server, notifications cannot be sent via Slack.
-- [S3](https://aws.amazon.com/s3/) can be used to support file uploads via Interval's [file input](https://interval.com/docs/io-methods/input-file) methods. If `S3_KEY_ID`,`S3_KEY_SECRET`,`S3_BUCKET`, and `S3_REGION` environment variables are not provided when running Interval Server, file uploads will not function properly.
+- [S3](https://aws.amazon.com/s3/) or S3-compatible storage providers (like [MinIO](https://min.io/) or [Cloudflare R2](https://www.cloudflare.com/products/r2/)) can be used to support file uploads via Interval's [file input](https://interval.com/docs/io-methods/input-file) methods. If `S3_KEY_ID`,`S3_KEY_SECRET`,`S3_BUCKET`,`S3_REGION`, and `S3_ENDPOINT` environment variables are not provided when running Interval Server, file uploads will not function properly. For S3-compatible providers, make sure to set the appropriate endpoint URL in `S3_ENDPOINT`.
 
-### S3 bucket configuration 
+### S3 bucket configuration
 
-To support file uploads, you will need to configure your S3 bucket for [Cross-origin Resource Sharing](https://docs.aws.amazon.com/AmazonS3/latest/userguide/enabling-cors-examples.html).   Here's an example policy:
+To support file uploads, you will need to configure your S3 bucket for [Cross-origin Resource Sharing](https://docs.aws.amazon.com/AmazonS3/latest/userguide/enabling-cors-examples.html). Here's an example policy:
+
 ```
 [
     {
@@ -50,7 +51,7 @@ To support file uploads, you will need to configure your S3 bucket for [Cross-or
         "MaxAgeSeconds": 3000
     }
 ]
-``` 
+```
 
 ## Required environment variables
 
@@ -62,7 +63,7 @@ To support file uploads, you will need to configure your S3 bucket for [Cross-or
 
 ### Ports
 
-Interval Server runs services on ports `3000` and `3033`. The main service runs on `3000`.
+Interval Server runs services on port `3000`.
 
 ## Running Interval Server locally
 
@@ -81,9 +82,8 @@ WSS_API_SECRET=<YOUR WSS API SECRET>
 
 _Note:_ you don't _need_ to use a `.env` file. As long as the [required variables](#required-environment-variables) are set, you should be good to go.
 
-3. If you _have not_ already setup a database, run `interval-server db-init` to initialize one.
-4. Run `interval-server start` to run `interval-server`.
-5. 🎉 Visit http://localhost:3000 to access your Interval Server!
+3. Run `interval-server start` to run `interval-server`.
+4. 🎉 Visit http://localhost:3000 to access your Interval Server!
 
 ## Running Interval Server in production
 
@@ -100,7 +100,7 @@ Important things to know:
 
 ## Connecting to Interval Server from your app
 
-Once your Interval Server instance is up and running, it's trivial to connect to it from your Interval apps. Just add an `endpoint` property pointing to your Interval Server instance to the Interval SDK's constructor. For example:
+Once your Interval Server instance is up and running, it's trivial to connect to it from your Interval apps. Just add an `endpoint` property pointing to your Interval Server instance to the Interval SDK's constructor. Interval server also prints the URL on startup in case you need it. For example:
 
 ```js
 const interval = new Interval({
@@ -118,16 +118,6 @@ Once you run `npm i -g @interval/server`, the following commands are available:
 ### `interval-server start`
 
 Starts Interval Server. See above for information on running Interval Server locally or in production.
-
-### `interval-server db-init`
-
-Creates and sets up an Postgres database for use with Interval Server.
-
-[psql](https://www.postgresql.org/docs/7.0/app-psql.htm) must be installed for this command to work.
-
-You must provide a `DATABASE_URL` environment variable of the form `postgresql://username:password@host:port/dbname` when running this command.
-
-By default, the `db-init` command will attempt to create a database with the name provided in your `DATABASE_URL` environment variable. If you've already created the database and just need to apply create the appropriate tables etc., you can run `interval-server db-init --skip-create` to skip the database creation step.
 
 ## Contributing
 
