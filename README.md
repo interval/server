@@ -91,7 +91,9 @@ Running Interval Server in production is largely the same as running in developm
 
 The Interval Server Docker image is: `docker.io/alexarena/interval-server:latest`.
 
-Many services [like Render](https://render.com/docs/deploy-an-image) make it trivial to deploy Docker images with just a few clicks.
+If you're looking for a quick and cheap deployment option, check out the community-made [Railway template](https://railway.com/template/tFqAVW?referralCode=chIZYq) which offers simple one-click deployment.
+
+Also, many services [like Render](https://render.com/docs/deploy-an-image) make it trivial to deploy Docker images with just a few clicks.  
 
 Important things to know:
 
