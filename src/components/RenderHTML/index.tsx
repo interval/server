@@ -3,6 +3,7 @@ import sanitizeHtml, { IOptions } from 'sanitize-html'
 
 interface RenderHTMLProps {
   html: string
+  dangerousSkipSantization?: boolean
 }
 
 const config: IOptions = {
@@ -69,10 +70,10 @@ const config: IOptions = {
 }
 
 export default function RenderHTML(props: RenderHTMLProps) {
-  const { html } = props
+  const { html, dangerousSkipSantization } = props
 
   const sanitized = useMemo(() => {
-    return sanitizeHtml(html, config)
+    return dangerousSkipSantization ? html : sanitizeHtml(html, config)
   }, [html])
 
   return (
