@@ -175,7 +175,10 @@ function ActionSchedule({
                 className="md:w-[140px]"
                 onChange={e =>
                   updateInput({
-                    schedulePeriod: e.target.value as SchedulePeriod,
+                    schedulePeriod: e.target.value as Exclude<
+                      SchedulePeriod,
+                      'once' | 'now'
+                    >,
                   })
                 }
                 value={input.schedulePeriod}
@@ -367,11 +370,17 @@ export default function ActionScheduleSettings({
 
   const actionScheduleInputs = useMemo(
     () =>
-      action.schedules.map(s => ({
-        id: s.id,
-        runnerName: s.runner ? displayName(s.runner) : undefined,
-        ...toScheduleInput(s),
-      })),
+      action.schedules.flatMap(s => {
+        const input = {
+          id: s.id,
+          runnerName: s.runner ? displayName(s.runner) : undefined,
+          ...toScheduleInput(s),
+        }
+        if (input.schedulePeriod === 'once' || input.schedulePeriod === 'now') {
+          return []
+        }
+        return [input]
+      }),
     [action.schedules]
   )
 

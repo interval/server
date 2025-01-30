@@ -1,4 +1,4 @@
-import * as cron from 'node-cron'
+import { Cron } from 'croner'
 import { ActionSchedule } from '@prisma/client'
 import {
   CronSchedule,
@@ -12,12 +12,16 @@ import { makeApiCall } from './wss'
 export function isInputValid(input: ScheduleInput): boolean {
   const schedule = toCronSchedule(input)
   if (!schedule) return false
-
-  return cron.validate(cronScheduleToString(schedule))
+  return isValid(schedule)
 }
 
 export function isValid(schedule: CronSchedule): boolean {
-  return cron.validate(cronScheduleToString(schedule))
+  try {
+    Cron(cronScheduleToString(schedule), { maxRuns: 0 })
+    return true
+  } catch {
+    return false
+  }
 }
 
 export async function syncActionSchedules(

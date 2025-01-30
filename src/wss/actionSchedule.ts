@@ -1,4 +1,4 @@
-import * as cron from 'node-cron'
+import { Cron } from 'croner'
 import { ActionSchedule, Prisma } from '@prisma/client'
 import {
   CronSchedule,
@@ -24,17 +24,54 @@ import { TransactionRunner } from '~/utils/user'
  * to be refactored in order to support multiple app servers.
  */
 
-const tasks = new Map<string, cron.ScheduledTask>()
+const tasks = new Map<string, Cron>()
 
 export function isInputValid(input: ScheduleInput): boolean {
   const schedule = toCronSchedule(input)
   if (!schedule) return false
-
-  return cron.validate(cronScheduleToString(schedule))
+  return isValid(schedule)
 }
 
 export function isValid(schedule: CronSchedule): boolean {
-  return cron.validate(cronScheduleToString(schedule))
+  try {
+    Cron(cronScheduleToString(schedule), { maxRuns: 0 })
+    return true
+  } catch {
+    return false
+  }
+}
+
+async function deleteActionSchedule(schedule: ActionSchedule) {
+  const run = await prisma.actionScheduleRun.findFirst({
+    where: {
+      actionScheduleId: schedule.id,
+    },
+  })
+
+  if (!run) {
+    try {
+      await prisma.actionSchedule.delete({
+        where: {
+          id: schedule.id,
+        },
+      })
+    } catch (err) {
+      logger.error(
+        'Failed actually deleting action schedule, will soft delete',
+        { id: schedule.id }
+      )
+    }
+  }
+
+  await prisma.actionSchedule.updateMany({
+    where: {
+      id: schedule.id,
+      deletedAt: null,
+    },
+    data: {
+      deletedAt: new Date(),
+    },
+  })
 }
 
 export async function syncActionSchedules(
@@ -51,43 +88,21 @@ export async function syncActionSchedules(
 
   for (const existing of existingSchedules) {
     if (
-      existing &&
-      (!actionIsBackgroundable ||
-        newSchedules.every(
-          newSchedule => !cronSchedulesEqual(existing, newSchedule)
-        ))
+      !actionIsBackgroundable ||
+      newSchedules.every(
+        newSchedule => !cronSchedulesEqual(existing, newSchedule)
+      )
     ) {
-      stop(existing.id)
-      const run = await prisma.actionScheduleRun.findFirst({
-        where: {
-          actionScheduleId: existing.id,
-        },
-      })
-
-      if (!run) {
-        try {
-          await prisma.actionSchedule.delete({
-            where: {
-              id: existing.id,
-            },
-          })
-        } catch (err) {
-          logger.error(
-            'Failed actually deleting action schedule, will soft delete',
-            { id: existing.id }
-          )
+      if (existing.once && !existing.deletedAt) {
+        // Preserve once schedules until they have run
+        const existingSchedule = cronScheduleToString(existing)
+        const cron = new Cron(existingSchedule, { maxRuns: 1 })
+        if (cron.nextRun()) {
+          continue
         }
       }
-
-      await prisma.actionSchedule.updateMany({
-        where: {
-          id: existing.id,
-          deletedAt: null,
-        },
-        data: {
-          deletedAt: new Date(),
-        },
-      })
+      stop(existing.id)
+      await deleteActionSchedule(existing)
     }
   }
 
@@ -210,8 +225,12 @@ export function schedule(
     return
   }
 
-  const task = cron.schedule(
+  const task = Cron(
     cronScheduleToString(actionSchedule),
+    {
+      maxRuns: actionSchedule.once ? 1 : undefined,
+      timezone: actionSchedule.timeZoneName,
+    },
     async () => {
       try {
         const action = await prisma.action.findUnique({
@@ -343,6 +362,10 @@ export function schedule(
             },
           })
 
+          if (actionSchedule.once) {
+            await deleteActionSchedule(actionSchedule)
+          }
+
           return
         }
 
@@ -433,6 +456,10 @@ export function schedule(
             },
           })
           return
+        } finally {
+          if (actionSchedule.once) {
+            await deleteActionSchedule(actionSchedule)
+          }
         }
       } catch (err) {
         logger.error('Failed spawning ActionScheduleRun', {
@@ -440,9 +467,6 @@ export function schedule(
           actionScheduleId: actionSchedule.id,
         })
       }
-    },
-    {
-      timezone: actionSchedule.timeZoneName,
     }
   )
 

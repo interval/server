@@ -179,12 +179,13 @@ const syncScheduleBody = z.object({
   actionId: z.string(),
   inputs: z.array(
     z.object({
-      schedulePeriod: z.enum(['hour', 'day', 'week', 'month']),
+      schedulePeriod: z.enum(['now', 'once', 'hour', 'day', 'week', 'month']),
       timeZoneName: z.enum(ALL_TIMEZONES).optional(),
       hours: z.number().optional(),
       minutes: z.number().optional(),
       dayOfWeek: z.number().optional(),
       dayOfMonth: z.number().optional(),
+      date: z.string().optional().nullable(),
       runnerId: z.string().optional().nullable(),
       notifyOnSuccess: z.boolean().optional(),
     })
