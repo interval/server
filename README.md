@@ -1,6 +1,6 @@
 # Interval Server
 
-Interval Server is the central node used to run applications developed with the [Interval SDK](https://github.com/interval/interval-node).
+Interval Server is the central node used to run applications developed with the [Interval SDK](https://github.com/interval/interval-node)
 
 **🚧 Note:** Previously Interval Server was only available as a closed-source cloud service. Now, it is possible to run an instance yourself. This is a new direction for the Interval project and the fully open-source/self-hosted Interval Server application is still in early phases of development. If you encounter an issues setting up an Interval Server instance, please let us know by opening an issue!
 
