@@ -20,10 +20,10 @@ Interval Server is a pure Node.js application. Node.js version 16 or higher is r
 
 ### Optional dependencies
 
-- [Postmark](https://postmarkapp.com) is used for sending application emails. In the future we may introduce a vendor-agnostic path for sending emails. If a `POSTMARK_API_KEY` environment variable is not provided when running Interval server, emails will not be sent. Use the `EMAIL_FROM` environment variable to customize the email `from` field. The default value is `Interval <help@interval.com>`.
-- [WorkOS](https://workos.com) is used for SSO, directory sync, and Sign in with Google. If `WORKOS_API_KEY`,`WORKOS_CLIENT_ID`, and `WORKOS_WEBHOOK_SECRET` environment variables are not provided when running Interval Server, these functions will not be available.
-- [Slack](https://slack.com) can be used to send notifications via Interval's [notify](https://interval.com/docs/action-context/notify) methods. If `SLACK_CLIENT_ID` and `SLACK_CLIENT_SECRET` environment variables are not provided when running Interval Server, notifications cannot be sent via Slack.
-- [S3](https://aws.amazon.com/s3/) or S3-compatible storage providers (like [MinIO](https://min.io/) or [Cloudflare R2](https://www.cloudflare.com/products/r2/)) can be used to support file uploads via Interval's [file input](https://interval.com/docs/io-methods/input-file) methods. If `S3_KEY_ID`,`S3_KEY_SECRET`,`S3_BUCKET`,`S3_REGION`, and `S3_ENDPOINT` environment variables are not provided when running Interval Server, file uploads will not function properly. For S3-compatible providers, make sure to set the appropriate endpoint URL in `S3_ENDPOINT`.
+-   [Postmark](https://postmarkapp.com) is used for sending application emails. In the future we may introduce a vendor-agnostic path for sending emails. If a `POSTMARK_API_KEY` environment variable is not provided when running Interval server, emails will not be sent. Use the `EMAIL_FROM` environment variable to customize the email `from` field. The default value is `Interval <help@interval.com>`.
+-   [WorkOS](https://workos.com) is used for SSO, directory sync, and Sign in with Google. If `WORKOS_API_KEY`,`WORKOS_CLIENT_ID`, and `WORKOS_WEBHOOK_SECRET` environment variables are not provided when running Interval Server, these functions will not be available.
+-   [Slack](https://slack.com) can be used to send notifications via Interval's [notify](https://interval.com/docs/action-context/notify) methods. If `SLACK_CLIENT_ID` and `SLACK_CLIENT_SECRET` environment variables are not provided when running Interval Server, notifications cannot be sent via Slack.
+-   [S3](https://aws.amazon.com/s3/) or S3-compatible storage providers (like [MinIO](https://min.io/) or [Cloudflare R2](https://www.cloudflare.com/products/r2/)) can be used to support file uploads via Interval's [file input](https://interval.com/docs/io-methods/input-file) methods. If `S3_ENABLED` or `S3_KEY_ID`,`S3_KEY_SECRET`,`S3_BUCKET`,`S3_REGION`, and `S3_ENDPOINT` environment variables are not provided when running Interval Server, file uploads will not function properly. For S3-compatible providers, make sure to set the appropriate endpoint URL in `S3_ENDPOINT`.
 
 ### S3 bucket configuration
 
@@ -55,11 +55,11 @@ To support file uploads, you will need to configure your S3 bucket for [Cross-or
 
 ## Required environment variables
 
-- `APP_URL` is the URL where your Interval Server instance is running. For example: `http://localhost:3000` or `https://example.com`.
-- `DATABASE_URL` is the Postgres connection string. It should follow the format `postgresql://username:password@host:port/dbname`.
-- `SECRET` is a secret that _you must provide_ for use in encrypting passwords. Any string is valid for this value, but you should use something secure!
-- `WSS_API_SECRET` is a secret that _you must provide_. It is used internally by Interval Server for communication between Interval services. Any string is valid for this value, but you should use something secure!
-- `AUTH_COOKIE_SECRET` is a secret that _you must provide_ for use in encrypting session cookies. Any string **at least 32 characters in length** is valid for this value, but you should use something secure!
+-   `APP_URL` is the URL where your Interval Server instance is running. For example: `http://localhost:3000` or `https://example.com`.
+-   `DATABASE_URL` is the Postgres connection string. It should follow the format `postgresql://username:password@host:port/dbname`.
+-   `SECRET` is a secret that _you must provide_ for use in encrypting passwords. Any string is valid for this value, but you should use something secure!
+-   `WSS_API_SECRET` is a secret that _you must provide_. It is used internally by Interval Server for communication between Interval services. Any string is valid for this value, but you should use something secure!
+-   `AUTH_COOKIE_SECRET` is a secret that _you must provide_ for use in encrypting session cookies. Any string **at least 32 characters in length** is valid for this value, but you should use something secure!
 
 ### Ports
 
@@ -93,12 +93,12 @@ The Interval Server Docker image is: `docker.io/alexarena/interval-server:latest
 
 If you're looking for a quick and cheap deployment option, check out the community-made [Railway template](https://railway.com/template/tFqAVW?referralCode=chIZYq) which offers simple one-click deployment.
 
-Also, many services [like Render](https://render.com/docs/deploy-an-image) make it trivial to deploy Docker images with just a few clicks.  
+Also, many services [like Render](https://render.com/docs/deploy-an-image) make it trivial to deploy Docker images with just a few clicks.
 
 Important things to know:
 
-- You'll still need to provide all [required environment variables](#required-environment-variables) when running the Interval Server Docker image.
-- Hosting providers like Render will automatically discover the Interval Server service running on port 3000 and will expose this port for you, but if your hosting provider doesn't do this, you'll have to handle exposing this yourself.
+-   You'll still need to provide all [required environment variables](#required-environment-variables) when running the Interval Server Docker image.
+-   Hosting providers like Render will automatically discover the Interval Server service running on port 3000 and will expose this port for you, but if your hosting provider doesn't do this, you'll have to handle exposing this yourself.
 
 ## Connecting to Interval Server from your app
 
@@ -106,8 +106,8 @@ Once your Interval Server instance is up and running, it's trivial to connect to
 
 ```js
 const interval = new Interval({
-  apiKey: process.env.INTERVAL_KEY,
-  endpoint: 'wss://<YOUR INTERVAL SERVER URL>/websocket', // Don't forget the /websocket path!
+    apiKey: process.env.INTERVAL_KEY,
+    endpoint: 'wss://<YOUR INTERVAL SERVER URL>/websocket', // Don't forget the /websocket path!
 })
 ```
 
