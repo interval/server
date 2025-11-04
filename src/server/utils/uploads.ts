@@ -6,23 +6,18 @@ import {
   DeleteObjectsCommandOutput,
   ListObjectsV2CommandOutput,
   ListObjectsV2Command,
+  S3ClientConfig,
 } from '@aws-sdk/client-s3'
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
-import env from '~/env'
+import env, { Env } from '~/env'
 
-function isS3Available(env: any): env is {
-  S3_KEY_ID: string
-  S3_KEY_SECRET: string
-  S3_REGION: string
-  S3_BUCKET: string
-  S3_ENDPOINT: string
-} {
+function isS3Available(env: Env) {
   return (
-    typeof env.S3_KEY_ID === 'string' &&
-    typeof env.S3_KEY_SECRET === 'string' &&
-    typeof env.S3_REGION === 'string' &&
-    typeof env.S3_BUCKET === 'string' &&
-    typeof env.S3_ENDPOINT === 'string'
+    env.S3_ENABLED ||
+    (typeof env.S3_KEY_ID === 'string' &&
+      typeof env.S3_KEY_SECRET === 'string' &&
+      typeof env.S3_REGION === 'string' &&
+      typeof env.S3_BUCKET === 'string')
   )
 }
 
@@ -35,14 +30,19 @@ function getS3Client(): S3Client {
     )
   }
 
-  return new S3Client({
-    region: env.S3_REGION,
-    credentials: {
+  let credentials: S3ClientConfig['credentials'] = undefined
+  if (env.S3_KEY_ID && env.S3_KEY_SECRET) {
+    credentials = {
       accessKeyId: env.S3_KEY_ID,
       secretAccessKey: env.S3_KEY_SECRET,
-    },
+    }
+  }
+
+  return new S3Client({
     forcePathStyle: true,
-    endpoint: env.S3_ENDPOINT,
+    region: env.S3_REGION || undefined,
+    credentials,
+    endpoint: env.S3_ENDPOINT || undefined,
   })
 }
 
@@ -50,7 +50,7 @@ export async function getIOPresignedUploadUrl(key: string): Promise<string> {
   const client = getS3Client()
 
   const command = new PutObjectCommand({
-    Bucket: env.S3_BUCKET,
+    Bucket: env.S3_BUCKET || undefined,
     Key: key,
   })
 
@@ -65,7 +65,7 @@ export async function getIOPresignedDownloadUrl(key: string): Promise<string> {
   const client = getS3Client()
 
   const command = new GetObjectCommand({
-    Bucket: env.S3_BUCKET,
+    Bucket: env.S3_BUCKET || undefined,
     Key: key,
   })
 
@@ -82,7 +82,7 @@ async function deleteIOObjects(
   const client = getS3Client()
 
   const command = new DeleteObjectsCommand({
-    Bucket: env.S3_BUCKET,
+    Bucket: env.S3_BUCKET || undefined,
     Delete: {
       Objects: keys.map(Key => ({ Key })),
     },
@@ -97,7 +97,7 @@ async function findIOObjects(
   const client = getS3Client()
 
   const command = new ListObjectsV2Command({
-    Bucket: env.S3_BUCKET,
+    Bucket: env.S3_BUCKET || undefined,
     Prefix: transactionId,
   })
 
