@@ -18,7 +18,6 @@ import env from '~/env'
 import { isWorkOSEnabled } from '~/server/auth'
 
 export const dashboardRouter = createRouter()
-  .middleware(authenticatedMiddleware)
   .query('global-feature-flags', {
     async resolve({ ctx }) {
       return await ctx.prisma.globalFeatureFlag.findMany({
@@ -37,6 +36,7 @@ export const dashboardRouter = createRouter()
       }
     },
   })
+  .middleware(authenticatedMiddleware)
   .middleware(organizationMiddleware)
   .query('structure', {
     input: z
