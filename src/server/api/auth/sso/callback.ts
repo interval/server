@@ -183,22 +183,6 @@ export default async function callback(req: Request, res: Response) {
   }
 
   if (!u) {
-    if (!(await isFlagEnabled('USER_REGISTRATION_ENABLED'))) {
-      const create = {
-        email: data.email,
-        firstName: data.firstName,
-        lastName: data.lastName,
-      }
-      await prisma.userWaitlistEntry.upsert({
-        create,
-        update: create,
-        where: {
-          email: data.email,
-        },
-      })
-      return res.redirect('/signup?REGISTRATION_DISABLED')
-    }
-
     // Create if doesn't exist
     u = await prisma.user.create({
       data,
