@@ -58,7 +58,11 @@ export async function createUser({
     }
   }>
 > {
-  if (!(await isFlagEnabled('USER_REGISTRATION_ENABLED'))) {
+  if (
+    !organization?.existing &&
+    !invitation &&
+    !(await isFlagEnabled('USER_REGISTRATION_ENABLED'))
+  ) {
     const create = {
       ...data,
       organizationName: organization?.new?.name,
