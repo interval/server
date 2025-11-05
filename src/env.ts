@@ -66,6 +66,6 @@ declare global {
   // eslint-disable-next-line
   namespace NodeJS {
     // eslint-disable-next-line
-    interface ProcessEnv extends z.infer<typeof schema> {}
+    interface ProcessEnv extends z.input<typeof schema> {}
   }
 }
