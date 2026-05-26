@@ -15,6 +15,7 @@ interface IVButtonOption {
 export interface IVButtonProps {
   htmlFor?: string
   href?: string
+  download?: string
   absolute?: boolean
   newTab?: boolean
   onClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
@@ -157,6 +158,7 @@ export default function IVButton(props: IVButtonProps) {
             href={props.href}
             ref={linkRef}
             onClick={disabled ? handleDisabledClick : undefined}
+            download={props.download}
           >
             {innerContents}
           </a>
@@ -165,6 +167,7 @@ export default function IVButton(props: IVButtonProps) {
             {...sharedProps}
             to={props.href}
             target={props.newTab ? '_blank' : undefined}
+            download={props.download}
             rel="noreferrer"
             ref={linkRef}
             reloadDocument={reloadDocument}

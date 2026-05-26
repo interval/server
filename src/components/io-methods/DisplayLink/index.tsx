@@ -58,6 +58,7 @@ export default function DisplayLink(props: RCTResponderProps<'DISPLAY_LINK'>) {
     <div className="space-y-2">
       <IVButton
         href={props.context === 'docs' ? undefined : actionUrl || url || '#'}
+        download={url && 'download' in props ? props.download : undefined}
         newTab={newTab}
         label={props.label}
         onClick={
