@@ -12,6 +12,7 @@
  */
 
 import { UserOrganizationAccess, UserAccessPermission } from '@prisma/client'
+import { z } from 'zod'
 
 type RolePermissionMap = {
   [key in UserAccessPermission]: UserAccessPermission[] | UserAccessPermission
@@ -72,11 +73,14 @@ const ROLE_PERMISSIONS: RolePermissionMap = {
 /**
  * These permissions/roles are available in the user interface to assign to users.
  */
-export const EXPOSED_ROLES: UserAccessPermission[] = [
+export const EXPOSED_ROLES = [
   'ADMIN',
   'DEVELOPER',
   'ACTION_RUNNER',
-]
+  'READONLY_VIEWER',
+] as const satisfies readonly UserAccessPermission[]
+
+export const exposedRole = z.enum(EXPOSED_ROLES)
 
 export const SDK_PERMISSIONS_MIN_VERSION = '0.34.0'
 

@@ -6,7 +6,7 @@ import {
   authenticatedMiddleware,
   organizationMiddleware,
 } from './util'
-import { hasPermission } from '~/utils/permissions'
+import { EXPOSED_ROLES, hasPermission } from '~/utils/permissions'
 import { inviteNewUser } from '~/emails'
 import { createOrganization, isSlugAvailable } from '../utils/organizations'
 import env from '~/env'
@@ -419,7 +419,9 @@ export const organizationRouter = createRouter()
         .string()
         .email()
         .transform(email => email.toLowerCase()),
-      permissions: z.array(z.nativeEnum(UserAccessPermission)),
+      permissions: z.array(
+        z.enum(EXPOSED_ROLES, { invalid_type_error: 'Invalid role' })
+      ),
       groupIds: z.array(z.string()),
     }),
     async resolve({
@@ -428,6 +430,13 @@ export const organizationRouter = createRouter()
     }) {
       if (!hasPermission(userOrganizationAccess, 'WRITE_USERS')) {
         throw new TRPCError({ code: 'FORBIDDEN' })
+      }
+
+      // Only allow granting permissions that the current user has
+      for (const perm of permissions) {
+        if (!hasPermission(userOrganizationAccess, perm)) {
+          throw new TRPCError({ code: 'FORBIDDEN' })
+        }
       }
 
       const existingUser = await prisma.user.findFirst({
