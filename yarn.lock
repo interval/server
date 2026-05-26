@@ -2061,10 +2061,10 @@
   resolved "https://registry.yarnpkg.com/@humanwhocodes/object-schema/-/object-schema-2.0.1.tgz#e5211452df060fa8522b55c7b3c0c4d1981cb044"
   integrity sha512-dvuCeX5fC9dXgJn9t+X5atfmgQAzUOWqS1254Gh0m6i8wKd10ebXkfNKiRK+1GWi/yTvvLDHpoxLr0xxxeslWw==
 
-"@interval/sdk@2.1.0-dev-download-1":
-  version "2.1.0-dev-download-1"
-  resolved "https://registry.yarnpkg.com/@interval/sdk/-/sdk-2.1.0-dev-download-1.tgz#3ec37024a98da0121471dffc05122902eaed421a"
-  integrity sha512-qZU+QpxzVNl2tODe3A/vVwGCZhn/Of7s28KcQ4wZJPiAiUaYVWUb9VdN2oxVUwbpkz6qxigv8i6GI2U4dxOaiQ==
+"@interval/sdk@^2.1.0-dev-download-2":
+  version "2.1.0-dev-download-2"
+  resolved "https://registry.yarnpkg.com/@interval/sdk/-/sdk-2.1.0-dev-download-2.tgz#fd4b0bcea30e1f7dd3ccb7614b17d2e616d22fb2"
+  integrity sha512-kGoc1tmjIVUzI0ceIsH34/fS03OerHRWXCMqAZ4T3Uf+1jQfOmMTpJDF//VSYLLKeCHGv/ZRKa8ywrqMh4uyfQ==
   dependencies:
     "@brillout/import" "^0.2.2"
     cross-fetch "^3.1.5"

@@ -47,7 +47,7 @@
     "express": "^4.18.2",
     "@aws-sdk/client-s3": "^3.109.0",
     "@aws-sdk/s3-request-presigner": "^3.109.0",
-    "@interval/sdk": "2.1.0-dev-download-1",
+    "@interval/sdk": "^2.1.0-dev-download-2",
     "@prisma/client": "^5.3.0",
     "prisma": "^5.3.0",
     "@prisma/generator-helper": "^5.3.0",
