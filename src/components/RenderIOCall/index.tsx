@@ -337,7 +337,7 @@ export function RenderIOCall(props: RenderIOCallProps) {
 
         Promise.allSettled(
           returnValuesToSubmit.map(async value => {
-            if (value instanceof Promise<ReturnResponseValue | undefined>) {
+            if (value instanceof Promise) {
               return await value
             }
             return value
