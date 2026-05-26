@@ -18,6 +18,7 @@ import {
 import { processInvitationGroupIds } from '../user'
 import { logger } from '~/server/utils/logger'
 import { SLACK_OAUTH_SCOPES } from '~/utils/isomorphicConsts'
+import { isOrgSlugValid } from '~/utils/validate'
 
 export const organizationRouter = createRouter()
   .query('slug', {
@@ -109,7 +110,11 @@ export const organizationRouter = createRouter()
       name: z.string(),
     }),
     async resolve({ ctx: { user }, input: { slug, name } }) {
-      if (!isSlugAvailable(slug)) {
+      if (!isOrgSlugValid(slug)) {
+        throw new TRPCError({ code: 'BAD_REQUEST' })
+      }
+
+      if (!(await isSlugAvailable(slug))) {
         throw new TRPCError({ code: 'BAD_REQUEST' })
       }
 
