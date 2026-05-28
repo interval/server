@@ -6,7 +6,7 @@ import {
   authenticatedMiddleware,
   organizationMiddleware,
 } from './util'
-import { hasPermission } from '~/utils/permissions'
+import { EXPOSED_ROLES, hasPermission } from '~/utils/permissions'
 import { inviteNewUser } from '~/emails'
 import { createOrganization, isSlugAvailable } from '../utils/organizations'
 import env from '~/env'
@@ -18,6 +18,7 @@ import {
 import { processInvitationGroupIds } from '../user'
 import { logger } from '~/server/utils/logger'
 import { SLACK_OAUTH_SCOPES } from '~/utils/isomorphicConsts'
+import { isOrgSlugValid } from '~/utils/validate'
 
 export const organizationRouter = createRouter()
   .query('slug', {
@@ -109,7 +110,11 @@ export const organizationRouter = createRouter()
       name: z.string(),
     }),
     async resolve({ ctx: { user }, input: { slug, name } }) {
-      if (!isSlugAvailable(slug)) {
+      if (!isOrgSlugValid(slug)) {
+        throw new TRPCError({ code: 'BAD_REQUEST' })
+      }
+
+      if (!(await isSlugAvailable(slug))) {
         throw new TRPCError({ code: 'BAD_REQUEST' })
       }
 
@@ -414,7 +419,9 @@ export const organizationRouter = createRouter()
         .string()
         .email()
         .transform(email => email.toLowerCase()),
-      permissions: z.array(z.nativeEnum(UserAccessPermission)),
+      permissions: z.array(
+        z.enum(EXPOSED_ROLES, { invalid_type_error: 'Invalid role' })
+      ),
       groupIds: z.array(z.string()),
     }),
     async resolve({
@@ -423,6 +430,13 @@ export const organizationRouter = createRouter()
     }) {
       if (!hasPermission(userOrganizationAccess, 'WRITE_USERS')) {
         throw new TRPCError({ code: 'FORBIDDEN' })
+      }
+
+      // Only allow granting permissions that the current user has
+      for (const perm of permissions) {
+        if (!hasPermission(userOrganizationAccess, perm)) {
+          throw new TRPCError({ code: 'FORBIDDEN' })
+        }
       }
 
       const existingUser = await prisma.user.findFirst({
