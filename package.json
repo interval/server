@@ -12,6 +12,7 @@
   "bin": {
     "interval-server": "dist/src/entry.js"
   },
+  "files": ["dist/"],
   "scripts": {
     "lint": "eslint src",
     "seed": "prisma db seed",
