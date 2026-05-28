@@ -2741,12 +2741,20 @@ export function setupWebSocketServer(wss: WebSocketServer) {
               },
             })
 
-            // delete development host instance
-            await prisma.hostInstance.delete({
-              where: {
-                id: ws.id,
-              },
-            })
+            // A present entry here means a reconnect with the same ws.id has
+            // already re-registered; the DB row now belongs to that connection.
+            if (connectedHosts.has(ws.id)) {
+              logger.info(
+                'Skipping HostInstance delete; reconnect already re-registered',
+                { instanceId: ws.id }
+              )
+            } else {
+              await prisma.hostInstance.delete({
+                where: {
+                  id: ws.id,
+                },
+              })
+            }
           } else {
             inProgressTransactions = await prisma.transaction.findMany({
               where: {
@@ -2763,14 +2771,23 @@ export function setupWebSocketServer(wss: WebSocketServer) {
               data: { status: 'HOST_CONNECTION_DROPPED' },
             })
 
-            try {
-              await prisma.hostInstance.delete({
-                where: { id: ws.id },
-              })
-            } catch (error) {
-              // swallow these in development to allow for cleaning up test data
-              if (process.env.NODE_ENV === 'production') {
-                throw error
+            // A present entry here means a reconnect with the same ws.id has
+            // already re-registered; the DB row now belongs to that connection.
+            if (connectedHosts.has(ws.id)) {
+              logger.info(
+                'Skipping HostInstance delete; reconnect already re-registered',
+                { instanceId: ws.id }
+              )
+            } else {
+              try {
+                await prisma.hostInstance.delete({
+                  where: { id: ws.id },
+                })
+              } catch (error) {
+                // swallow these in development to allow for cleaning up test data
+                if (process.env.NODE_ENV === 'production') {
+                  throw error
+                }
               }
             }
           }
