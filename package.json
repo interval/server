@@ -4,7 +4,7 @@
   "version": "1.1.0",
   "license": "MIT",
   "engines": {
-    "node": ">=16"
+    "node": ">=24.22.1"
   },
   "prisma": {
     "seed": "ts-node --project tsconfig.server.json -r tsconfig-paths/register prisma/seed.ts"

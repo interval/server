@@ -1,4 +1,6 @@
-FROM node:18.18.0-alpine AS builder
+FROM node:24.22.1-alpine AS builder
+
+RUN apk add --no-cache openssl
 
 WORKDIR /app
 
@@ -10,7 +12,9 @@ COPY . .
 
 RUN yarn build
 
-FROM node:18.18.0-alpine AS runner
+FROM node:24.22.1-alpine AS runner
+
+RUN apk add --no-cache openssl
 
 WORKDIR /app
 
